@@ -1,0 +1,8 @@
+;ejemploconex.ini
+
+[Database_Server]
+user = usuario
+password = contrasena
+host = 111.101.1.1
+port = 3306
+database = basdedatos

@@ -1,0 +1,8 @@
+*.txt
+*.ini
+*.log
+*.sh
+__pycache__
+DTOS/__pycache__
+AEILEADING_CONTROL_CARGAIT8600_20240116_v2_MQTT_BD_local.py
+./entorno
