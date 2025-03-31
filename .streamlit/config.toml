@@ -1,0 +1,23 @@
+[browser]
+gatherUsageStats = false
+
+[server]
+runOnSave = false
+folderWatchBlacklist = ["logs"]
+fileWatcherType = "none"
+headless = true  # Permite ejecutar Streamlit sin entorno gráfico.
+enableCORS = true  # Restringe accesos externos.
+enableXsrfProtection = true  # Añade protección contra ataques XSRF.
+
+[runner]
+magicEnabled = false
+fastReruns = false
+
+[theme]
+base = "light"
+primaryColor = "#4343FF"
+backgroundColor = "#FFFFFF"
+textColor = "#020282"
+
+[client]
+showErrorDetails = "none"    # Muestra detalles de errores (útil para depuración)

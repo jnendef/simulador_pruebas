@@ -25,12 +25,12 @@ if not os.path.exists(direc):
         direc = path
 
 logging.basicConfig(
-    level=logging.DEBUG,
-    handlers=[RotatingFileHandler(os.path.join(direc,"logsimulador.log"), maxBytes=1000000, backupCount=4)],
+    level=logging.INFO,
+    handlers=[RotatingFileHandler(os.path.join(direc,"logsimulador.log"), maxBytes=1000000, backupCount=4, delay=True)],
     format='%(asctime)s %(levelname)s %(message)s',
     datefmt='%m/%d/%Y %I:%M:%S %p')
 
-st.set_page_config("Resultados",layout="centered")
+# st.set_page_config("Resultados",layout="centered")
 
 if 'datoscomunidad' not in st.session_state:
     st.session_state.datoscomunidad = {
