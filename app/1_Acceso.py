@@ -24,7 +24,8 @@ if not os.path.exists(direc):
     except Exception as e:
         direc = path
 
-logging.getLogger("geopy").setLevel(logging.ERROR)
+logging.getLogger("Nominatim").setLevel(logging.ERROR)
+logging.getLogger("geopy.geocoders").setLevel(logging.ERROR)
 logging.getLogger("streamlit").setLevel(logging.ERROR)
 
 logging.basicConfig(
@@ -91,7 +92,8 @@ if 'informe' not in st.session_state:
     st.session_state.informe = {}
 
 #Creacion de un localizador de coordenadas
-geolocator = Nominatim(user_agent="aplication")
+if 'golocalizador' not in st.session_state:
+    st.session_state.golocalizador = Nominatim(user_agent="aplication")
 if 'localizador' not in st.session_state:
     st.session_state.localizador = None
     
@@ -99,6 +101,8 @@ st.markdown("# SOFTWARE DE SIMULACIÓN DE COMUNIDADES ENERGÉTICAS")
 st.write(dt.datetime.today().__format__('%d %b %Y, %I:%M%p'))
 
 ce = False
+
+geolocator = st.session_state.golocalizador
 
 st.session_state.comunidad, st.session_state.comunidadDF, ce = creacion_CE(geolocator,ce)
 
