@@ -344,14 +344,14 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
     # Impresión del mensaje de bienvenida
 
     if(len(records)==0):
-        logging.info("Paso1 de Estimacion de la produccion: Sin comunidades que simular en este paso")
+        # logging.info("Paso1 de Estimacion de la produccion: Sin comunidades que simular en este paso")
         return proceso, VectorDatosProduccion, idComunidad
 
     try:
         idComunidad = records[1]
         result = records[-1]
 
-        logging.info(" --- COMIENZO PROCESO OBTENCION ESTIMACION PRODUCCION A TRAVES API PVGIS CE " + str(idComunidad) + " --- ")
+        # logging.info(" --- COMIENZO PROCESO OBTENCION ESTIMACION PRODUCCION A TRAVES API PVGIS CE " + str(idComunidad) + " --- ")
 
         if result == None:
             result = 1000
@@ -375,7 +375,7 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
         rowDataGeneradores = agente.ejecutar(sql)
         
         if(len(rowDataGeneradores)==0):
-            logging.info("Paso1 de Estimacion de la produccion: Sin generadores que simular en este paso")
+            # logging.info("Paso1 de Estimacion de la produccion: Sin generadores que simular en este paso")
             return proceso, VectorDatosProduccion, idComunidad
             
         # Para cada generador de la comunidad
@@ -402,7 +402,7 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
                 try:
                     wind_peak_power = float(wind_peak_power)
                 except:
-                    logging.debug("El dato de potencia eolica se ha puesto en 1.")
+                    # logging.debug("El dato de potencia eolica se ha puesto en 1.")
                     wind_peak_power = 1.0
                 # Cálculo para el tipo de generador eolico (generator_type = 2)            
                 matrizEnergiaPromedio = wind_peak_power*obtenerDatosPVGIS_eolica (lat, lon, Dias)
@@ -427,7 +427,7 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
                 
             except Exception as e:
                 proceso = False
-                logging.error("ERROR EN EL PASO 1: EXCEPCION EN LA OPERACION DE BASE DE DATOS, ", exc_info=True)
+                # logging.error("ERROR EN EL PASO 1: EXCEPCION EN LA OPERACION DE BASE DE DATOS, ", exc_info=True)
                 final1001(agente, fcStart, idComunidad)
 
                 return proceso, VectorDatosProduccion, idComunidad
@@ -438,7 +438,8 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
                 agente.ejecutar(sentenciaDelete)
                 agente.commitTransaction()
             except Exception as e:
-                logging.info("FALLO EN EL BORRADO EN LA BASE DE DATOS EN EL PASO 1: ", exc_info=True)
+                pass
+                # logging.info("FALLO EN EL BORRADO EN LA BASE DE DATOS EN EL PASO 1: ", exc_info=True)
 
         if proceso:
             try:
@@ -446,7 +447,8 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
                 agente.ejecutarMuchos(sentenciaInsert, VectorDatosProduccion)
                 agente.commitTransaction()
             except Exception as e:
-                logging.error("ERROR EN INSERCION DE MUCHOS EN BASE DE DATOS EN EL PASO 1: ", exc_info=True)
+                pass
+                # logging.error("ERROR EN INSERCION DE MUCHOS EN BASE DE DATOS EN EL PASO 1: ", exc_info=True)
 
         # Indicamos que la ejecución ha acabado correctamente   
         final1000(agente,fcStart,idComunidad)
@@ -454,7 +456,7 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
     # Si ocurre un error lo indicamos
     except Exception as e:
         proceso = False
-        logging.error("ERROR EN EL PASO 1: EXCEPCION EN LA EJECUCION DEL PROCESO: ", exc_info=True)
+        # logging.error("ERROR EN EL PASO 1: EXCEPCION EN LA EJECUCION DEL PROCESO: ", exc_info=True)
 
         final1001(agente, fcStart, idComunidad)
 
@@ -471,7 +473,7 @@ if __name__ == "__main__":
             direc = path
     
     logging.basicConfig(
-        level=logging.DEBUG,
+        level= logging.DEBUG,
         handlers=[RotatingFileHandler(os.path.join(direc,'LEADING_PASO1_Output.log'), maxBytes=1000000, backupCount=4)],
         format='%(asctime)s %(levelname)s %(message)s',
         datefmt='%m/%d/%Y %I:%M:%S %p')
@@ -501,6 +503,7 @@ if __name__ == "__main__":
         try:
             Paso1(agenteEjecucionMySql, rc, anyoDatosGuardarComunidad, bisiesto)
         except Exception as e:
-            logging.debug("Fallo Paso 1: ", exc_info=True)
+            # logging.debug("Fallo Paso 1: ", exc_info=True)
+            pass
 
     agenteEjecucionMySql.cursor.close()

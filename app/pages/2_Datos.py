@@ -57,7 +57,7 @@ if ce:
             dfBat, numeroBat = instalacion_bat(ce, fv, eo, gen)
     
         except Exception as e:
-            logging.error("En las baterías: ", exc_info=True)
+            # .error("En las baterías: ", exc_info=True)
             st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si  el error persiste, consulte los logs o hable con el administrador.")
             
     with tab5:
@@ -67,23 +67,23 @@ if ce:
             dfUs, numeroUsers, usr = registro_usuarios(ce, gen, usr)
         
         except Exception as e:
-            logging.error("En los usuarios: ", exc_info=True)
+            # logging.error("En los usuarios: ", exc_info=True)
             st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si  el error persiste, consulte los logs o hable con el administrador.")
     
     with tab6:
         try:
             registro_coeficientes(numeroUsers,comunidadEnerg)
         except Exception as e:
-            logging.error("En los coeficinetes: ", exc_info=True)
+            # logging.error("En los coeficinetes: ", exc_info=True)
             st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si  el error persiste, consulte los logs o hable con el administrador.")
     
     with tab7:
         datos=[comunidadEnerg, dfComu, ce, dfFV, numeroFV, dfEO, numeroEO, dfBat, numeroBat, gen, dfUs, numeroUsers, usr]
-        logging.info("Comienzo de los envios de los datos para la comunidad energetica")
+        # logging.info("Comienzo de los envios de los datos para la comunidad energetica")
         try:
             confirmacion(datos)
         except Exception as e:
-            logging.error("En la confirmación de los datos: ", exc_info=True)
+            # logging.error("En la confirmación de los datos: ", exc_info=True)
             st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si  el error persiste, consulte los logs o hable con el administrador.")
         
     
