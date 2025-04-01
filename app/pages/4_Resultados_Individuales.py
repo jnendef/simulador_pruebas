@@ -12,7 +12,7 @@ import pandas as pd
 
 from pages.coef_scripts.agente_Basico import Agente_MySql
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from pages.pages_content.page4 import obtencion_datos_usr, datos_matriz, preparacion_lista, obtencion_indices, grafico_prod_total
 from pages.pages_content.page4 import dataframes_datos, graficado_energia, graficado_coef, coeficientes_intervalo
@@ -49,10 +49,16 @@ try:
 
     eleccion = preparacion_lista(redListaU)
     fecha_min = datetime(st.session_state.anyo, 1, 1, 0, 0)
-    fecha_max = datetime(st.session_state.anyo+1, 1, 1, 0, 0)
-    start_time = st.date_input("fecha inicio",value = fecha_min, min_value = fecha_min, max_value = fecha_max)
+    fecha_max = datetime(st.session_state.anyo+1, 1, 1, 0, 0) 
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        start_time = st.date_input("Fecha inicio",value = fecha_min, min_value = fecha_min, max_value = fecha_max)
+    with col2:
+        deltat = fecha_max-datetime(start_time.year, start_time.month, start_time.day, 0, 0)
+        incremento = st.number_input("Intervalo días", value = 1, min_value = 1, max_value = deltat.days, step=1, format="%d")
 
-    end_time = st.date_input("fecha fin", value = fecha_max, min_value = fecha_min, max_value = fecha_max)
+    end_time = start_time + timedelta(incremento)
 
     df0, df1, df2, df3, df4 = dataframes_datos(start_time, end_time, eleccion, diccioUsr, mDatos)
     
