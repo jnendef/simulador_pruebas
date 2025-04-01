@@ -8,7 +8,7 @@ from pages.scripts.funcionesgrles import comprobarStrings, camposDataframe, borr
 import datetime as dt
 import numpy as np
 import pandas as pd
-# import logging
+import logging
 
 def creacion_CE(geolocator,ce):
     st.info("Nota aclaratoria: Obligatorio cumplimentar Nombre de la comunidad y Ubicación. No emplear signos de puntuación")

@@ -24,6 +24,9 @@ if not os.path.exists(direc):
     except Exception as e:
         direc = path
 
+logging.getLogger("geopy").setLevel(logging.ERROR)
+logging.getLogger("streamlit").setLevel(logging.ERROR)
+
 logging.basicConfig(
     level=logging.DEBUG,
     handlers=[RotatingFileHandler(os.path.join(direc,"logsimulador.log"), maxBytes=1000000, backupCount=4, delay=True)],
@@ -86,8 +89,6 @@ if 'usuariosCE' not in st.session_state:
 
 if 'informe' not in st.session_state:
     st.session_state.informe = {}
-
-# logging.getLogger("geopy").setLevel(logging.ERROR)
 
 #Creacion de un localizador de coordenadas
 geolocator = Nominatim(user_agent="aplication")

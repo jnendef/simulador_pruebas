@@ -19,6 +19,9 @@ import pages.coef_scripts.agente_Basico as aB
 import logging
 from logging.handlers import RotatingFileHandler
 
+logging.getLogger("requests").setLevel(logging.ERROR)
+logging.getLogger("json").setLevel(logging.ERROR)
+
 # Variables globales
 HORAS = 24
 
