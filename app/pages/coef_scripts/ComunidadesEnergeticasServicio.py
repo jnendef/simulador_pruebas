@@ -170,8 +170,7 @@ def obtenerDatosComunidadEnergeticaDesdeBBDD (agenteEjecucionMySql, idComunidadE
 
     except Exception as e :
         mensajeExcepServ = "Error en el servicio: ComunidadesEnergeticasServicio.obtenerDatosComunidadEnergeticaDesdeBBDD "
-        # logging.error(mensajeExcepServ)
-        # logging.exception("Unexpected {}, {}".format(e,type(e)))
+        logging.error(mensajeExcepServ, exc_info=True)
 
         raise SystemExit(e)
 
@@ -230,8 +229,7 @@ def almacenarDatosCalculadosTxt(ce,anyo):
         return "CAU"+str(ce.getIdComunidadEnergetica())+"_"+str(anyo)+".txt"
 
     except Exception as e:
-        pass
-        # logging.error("ERROR EN EL ALMACENAJE EN TXT PASO 4: "+ str(e))
+        logging.error("ERROR EN EL ALMACENAJE EN TXT PASO 4: ", exc_info=True)
 
 def almacenarDatosCalculadosComunidadEnergetica(agenteEjecucionMySql, ce):
     """
@@ -288,7 +286,7 @@ def almacenarDatosCalculadosComunidadEnergetica(agenteEjecucionMySql, ce):
         return True
 
     except Exception as e:
-        # logging.debug("ERROR EN LA INSERCION DE DATOS DE COEFICIENTES EN LA BASE DE DATOS EN EL PASO 4: "+str(e))
+        logging.error("ERROR EN LA INSERCION DE DATOS DE COEFICIENTES EN LA BASE DE DATOS EN EL PASO 4: ", exc_info=True)
         return False
 
 def compruebaSiEjecutar(agenteEjecucionMySql):
@@ -357,7 +355,7 @@ def obtenerParametrosEjecucionSimulacion(agenteEjecucionMySql,id_EnergyCommunity
     
     except Exception as e:
         stringToResult = None
-        # logging.debug("ERROR EN LA ACTUALIZACION AL PROCESO 40 DEL PASO 4: "+str(e))
+        logging.error("ERROR EN LA ACTUALIZACION AL PROCESO 40 DEL PASO 4: ", exc_info=True)
         return stringToResult
 
 def eliminarDatosUsuarios(agenteEjecucionMySql,ComunidadEnergetica):
@@ -369,5 +367,4 @@ def eliminarDatosUsuarios(agenteEjecucionMySql,ComunidadEnergetica):
             agenteEjecucionMySql.commitTransaction()
 
     except Exception as e:
-        pass
-        # logging.debug("ERROR AL ELIMINAR DATOS DE USUARIOS EN EL PASO 4: "+str(e))
+        logging.error("ERROR AL ELIMINAR DATOS DE USUARIOS EN EL PASO 4: ", exc_info=True)

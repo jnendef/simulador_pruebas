@@ -40,59 +40,59 @@ def comprobacionCE(agente,datos):
         for i,j in zip(columnasCE,records[0]):
             datosCE[i[0]] = j
     else:
-        # # logging.warning("Falta informacion en la tabla leading_db.energy_community")
+        logging.warning("Falta informacion en la tabla leading_db.energy_community")
         return False,datosCE
 
     if datosCE['name'] == "":
-        # # logging.warning("Falta el nombre de la comunidad energetica")
+        logging.warning("Falta el nombre de la comunidad energetica")
         return False,datosCE
     
     if datosCE['location'] == "":
-        # # logging.warning("Falta la localizacion de la comunidad energetica")
+        logging.warning("Falta la localizacion de la comunidad energetica")
         return False,datosCE
     
     try:
         if float(datosCE['inst_cost']) <= 0.0:
-            # # logging.warning("Falta especificar el coste de la instalacion") 
+            logging.warning("Falta especificar el coste de la instalacion") 
             return False,datosCE
     except:
-        # # logging.warning("No se pudo convertir el coste a cifra")
+        logging.warning("No se pudo convertir el coste a cifra")
         return False,datosCE
     
     try:
         if float(datosCE['inst_monthly_fee']) <= 0.0:
-            # # logging.warning("Falta especificar el valor de la amortizacion de la instalacion") 
+            logging.warning("Falta especificar el valor de la amortizacion de la instalacion") 
             return False,datosCE
     except:
-        # # logging.warning("No se pudo convertir la amortizacion en cifra")
+        logging.warning("No se pudo convertir la amortizacion en cifra")
         return False,datosCE
     
     if datosCE['id_administrator'] == "":
-        # # logging.warning("Falta el identificador del administrador")
+        logging.warning("Falta el identificador del administrador")
         return False,datosCE
 
     try:
         if float(datosCE['max_participation']) < 0.0 or float(datosCE['max_participation']) > 100.0:
-            # logging.warning("Fallo en la participacion maxima, no esta en el rango")
+            logging.warning("Fallo en la participacion maxima, no esta en el rango")
             return False,datosCE
     except:
-        # logging.warning("No se pudo convertir la participacion maxima de la comunidad en cifra")
+        logging.warning("No se pudo convertir la participacion maxima de la comunidad en cifra")
         return False,datosCE
 
     try:
         if float(datosCE['min_participation']) < 0.0 or float(datosCE['min_participation']) > 100.0:
-            # logging.warning("Fallo en la participacion minima, no esta en el rango")
+            logging.warning("Fallo en la participacion minima, no esta en el rango")
             return False,datosCE
     except:
-        # logging.warning("No se pudo convertir la participacion minima de la comunidad en cifra")
+        logging.warning("No se pudo convertir la participacion minima de la comunidad en cifra")
         return False,datosCE
     
     try:
         if float(datosCE['energy_poverty']) < 0.0 or float(datosCE['energy_poverty']) > 100.0:
-            # logging.warning("Fallo en la pobreza energetica, no esta en el rango")
+            logging.warning("Fallo en la pobreza energetica, no esta en el rango")
             return False,datosCE
     except:
-        # logging.warning("No se pudo convertir la participacion de pobreza energetica de la comunidad en cifra")
+        logging.warning("No se pudo convertir la participacion de pobreza energetica de la comunidad en cifra")
         return False,datosCE
     # El campo 'simulation_type' no está definido correctamente en la documentacion. Existe el campo pero no queda claro que tenga utilidad 
     return True,datosCE
@@ -115,24 +115,24 @@ def comprobacionUS(agente,datos):
                 aux[i[0]] = j
             datosUs.append(aux)
     else:
-        # logging.warning("Falta informacion en la tabla leading_db.energy_community_consumer_profile")
+        logging.warning("Falta informacion en la tabla leading_db.energy_community_consumer_profile")
         return False,datosUs
     
     for d in datosUs:
         try:
             if int(d['id_energy_community_consumer_profile']) <= 0:
-                # logging.warning("Falta el dato incremental del identificador del perfil de consumo") 
+                logging.warning("Falta el dato incremental del identificador del perfil de consumo") 
                 return False,datosUs
         except:
-            # logging.error("No se pudo convertir el id_energy_community_consumer_profile a cifra")
+            logging.error("No se pudo convertir el id_energy_community_consumer_profile a cifra")
             return False,datosUs
         
         try:
             if int(d['id_consumer_profile']) <= 0:
-                # logging.warning("Falta el dato incremental del identificador del perfil") 
+                logging.warning("Falta el dato incremental del identificador del perfil") 
                 return False,datosUs
         except:
-            # logging.error("No se pudo convertir el id_consumer_profile a cifra")
+            logging.error("No se pudo convertir el id_consumer_profile a cifra")
             return False,datosUs
     
     return True,datosUs
@@ -154,7 +154,7 @@ def comprobacionGen(agente,datos):
                 aux[i[0]] = j
             datosFV.append(aux)
     else:
-        # logging.warning("Falta informacion en la tabla leading_db.generator")
+        logging.warning("Falta informacion en la tabla leading_db.generator")
         return False,datosFV
     
     contenido = ['id_energy_community','id_generator_type','description','latitude','longitude','pv_module_type','pv_num_modules','pv_peak_power','pv_module_orientation','pv_module_tilt','wind_peak_power']
@@ -162,7 +162,7 @@ def comprobacionGen(agente,datos):
     for d in datosFV:
         for i in contenido:
             if str(d[i]) == "":
-                # logging.debug("Fallo en la " + i + ", no esta en la tabla")
+                logging.debug("Fallo en la " + i + ", no esta en la tabla")
                 return False,datosFV
 
     return True, datosFV
@@ -184,7 +184,7 @@ def comprobacionBat(agente,datos):
                 aux[i[0]] = j
             datosBat.append(aux)
     else:
-        # logging.warning("Falta informacion en la tabla leading_db.storage_system")
+        logging.warning("Falta informacion en la tabla leading_db.storage_system")
         return False,datosBat
     
     contenido = ['id_energy_community', 'id_battery_type', 'ds_storage_system', 'voltage', 'nominal_capacity', 'max_limit', 'min_limit', 'init_capacity', 'max_hour_discharge']
@@ -192,7 +192,7 @@ def comprobacionBat(agente,datos):
     for d in datosBat:
         for i in contenido:
             if str(d[i]) == "":
-                # logging.debug("Fallo en la " + i + ", no esta en la tabla")
+                logging.debug("Fallo en la " + i + ", no esta en la tabla")
                 return False,datosBat
 
     return True, datosBat
@@ -215,7 +215,7 @@ def comprobacionDb(agente,records):
         gen,datosGen = comprobacionGen(agente,datos)
         bat,datosBat = comprobacionBat(agente,datos)
     else:
-        # logging.info("No hay comunidades energeticas que simular")
+        logging.info("No hay comunidades energeticas que simular")
         return False,datos,datosUs,datosCe,datosGen,datosBat
     
     if ce and us and gen:
@@ -256,7 +256,7 @@ if __name__ == "__main__":
         okey,datos,datosUs,datosCe,datosGen,datosBat = comprobacionDb(agenteEjecucionMySql,rc)
         if not okey:
             print("Error, mire los logs")
-            # logging.warning("Algo fue mal en la comunidad: "+str(rc[1]))
+            logging.warning("Algo fue mal en la comunidad: "+str(rc[1]))
         else:
             print("Todo en orden")
 

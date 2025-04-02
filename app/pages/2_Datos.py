@@ -14,8 +14,11 @@ from pages.pages_content.page2 import creacion_CE, instalacion_fv, instalacion_e
 from pages.pages_content.page2 import instalacion_bat, registro_usuarios, registro_coeficientes
 
 # Comienza la pagina
-st.title("Datos comunidad de : "+str(st.session_state.comunidades[-1][0]) + " [" + str(st.session_state.comunidades[-1][1]) + "]")
-
+try:
+    st.title("Datos comunidad de : "+str(st.session_state.comunidades[-1][0]) + " [" + str(st.session_state.comunidades[-1][1]) + "]")
+except:
+    st.title("Ponga nombre y localidad de la Comunidad.")
+             
 st.write(dt.datetime.today().__format__('%d %b %Y, %I:%M%p'))
 st.info("Se deben rellenar todos los campos requeridos antes de la subida de datos y la simulación. Prestar atención a los avisos en cada pestaña")
 
@@ -64,23 +67,22 @@ if ce:
             dfUs, numeroUsers, usr = registro_usuarios(ce, gen, usr)
         
         except Exception as e:
-            # logging.error("En los usuarios: ", exc_info=True)
+            logging.error("En los usuarios: ", exc_info=True)
             st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si  el error persiste, consulte los logs o hable con el administrador.")
     
     with tab5:
         try:
             registro_coeficientes(numeroUsers,comunidadEnerg)
         except Exception as e:
-            # logging.error("En los coeficinetes: ", exc_info=True)
+            logging.error("En los coeficinetes: ", exc_info=True)
             st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si  el error persiste, consulte los logs o hable con el administrador.")
     
     with tab6:
         datos=[comunidadEnerg, dfComu, ce, dfFV, numeroFV, dfEO, numeroEO, dfBat, numeroBat, gen, dfUs, numeroUsers, usr]
-        # logging.info("Comienzo de los envios de los datos para la comunidad energetica")
         try:
             confirmacion(datos)
         except Exception as e:
-            # logging.error("En la confirmación de los datos: ", exc_info=True)
+            logging.error("En la confirmación de los datos: ", exc_info=True)
             st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si  el error persiste, consulte los logs o hable con el administrador.")
         
     

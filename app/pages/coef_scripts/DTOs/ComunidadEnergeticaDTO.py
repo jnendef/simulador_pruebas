@@ -498,8 +498,7 @@ class ComunidadEnergeticaDTO:
             try:
                 usuariosComunidad[it_cliente].setCuotaParticipacion_calculadaCR(cuotaParticipacionCalculadaCE/contadorCuotasParticipacion)
             except ZeroDivisionError as e:
-                logging.debug("Error en el paso de obtencion de cuota de participacion:")
-                logging.debug(str(e))
+                logging.error("Error en el paso de obtencion de cuota de participacion:", exc_info=True)
                 usuariosComunidad[it_cliente].setCuotaParticipacion_calculadaCR(0.0)
         
         #     for cliente

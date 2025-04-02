@@ -24,13 +24,11 @@ if not os.path.exists(direc):
     except Exception as e:
         direc = path
 
-logging.getLogger("Nominatim").setLevel(logging.ERROR)
-logging.getLogger("geopy.geocoders").setLevel(logging.ERROR)
-logging.getLogger("streamlit").setLevel(logging.ERROR)
+# logger = logging.getLogger('1_Acceso')
 
 logging.basicConfig(
     level=logging.DEBUG,
-    handlers=[RotatingFileHandler(os.path.join(direc,"logsimulador.log"), maxBytes=1000000, backupCount=4, delay=True)],
+    handlers=[RotatingFileHandler(os.path.join(direc,"logsimulador.log"), maxBytes=1000000, backupCount=4)],
     format='%(asctime)s %(levelname)s %(message)s',
     datefmt='%m/%d/%Y %I:%M:%S %p')
 

@@ -155,7 +155,7 @@ def Paso3(agente, idComunidad):
     VectorDatosBaterias = []
 
     try:
-        # logging.info (" --- SCRIPT SIMULACION COMPORTAMIENTO BATERIA COMUNIDAD ENERGÉTICA CE " + str(idComunidad) + " --- ")
+        logging.info (" --- SCRIPT SIMULACION COMPORTAMIENTO BATERIA COMUNIDAD ENERGÉTICA CE " + str(idComunidad) + " --- ")
         # Establemos en el energy_community_process la fecha de comienzo
 
         fcStart = datetime.datetime.now()
@@ -216,8 +216,7 @@ def Paso3(agente, idComunidad):
 
         # Paso 2.3.- Deben coincidir el número de horas de generación y consumos
         if(len(registrosDatosConsumosComunidad)!=len(registrosDatosGeneracionComunidad)):
-            # logging.info("ERROR EN EL PASO 3: No coincide el número de registros de generación respecto a los de consumo")
-
+            logging.info("ERROR EN EL PASO 3: No coincide el número de registros de generación respecto a los de consumo")
             return proceso,VectorDatosBaterias
 
         # Paso 3: Creamos una instancia con el estado inicial de la batería
@@ -269,7 +268,7 @@ def Paso3(agente, idComunidad):
     # Si ocurre un error lo indicamos
     except Exception as ex:
         proceso = False
-        # logging.error("ERROR EN EL PASO 3: EXCEPCION EN LA EJECUCION DEL PROCESO: ", exc_info=True)
+        logging.error("ERROR EN EL PASO 3: EXCEPCION EN LA EJECUCION DEL PROCESO: ", exc_info=True)
 
         final1001(agente,fcStart,idComunidad)
 
@@ -312,7 +311,6 @@ if __name__ == "__main__":
         try:
             Paso3(agenteEjecucionMySql,ids)
         except Exception as e:
-            pass
-            # logging.error("Fallo Paso 3: " , exc_info=True)
+            logging.error("Fallo Paso 3: " , exc_info=True)
     
     agenteEjecucionMySql.cursor.close()

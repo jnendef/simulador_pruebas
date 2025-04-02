@@ -442,7 +442,7 @@ def confirmacion(datos):
                     st.session_state.datoscomunidad["min_participation"]=comunidadEnerg["min_participation"]
                     st.session_state.datoscomunidad["energy_poverty"]=comunidadEnerg["energy_poverty"]
                     idComunidad,start = envioDatos(comunidadEnerg,fotovoltaicos,eolicos,baterias,usuarios,start)
-                    # logging.info("ID de la comunidad: "+str(idComunidad))
+                    logging.info("ID de la comunidad: "+str(idComunidad))
                     st.session_state.idComunidad = idComunidad
                     st.session_state.informe["cantidadFV"] = numeroFV
                     st.session_state.informe["cantidadEO"] = numeroEO
@@ -453,7 +453,7 @@ def confirmacion(datos):
                     sub = True
                     st.session_state.envioInfo = True
                 except Exception as e:
-                    # logging.error("En el envío de los datos: ", exc_info=True)
+                    logging.error("En el envío de los datos: ", exc_info=True)
                     st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si el error persiste, consulte los logs o hable con el administrador.")
                     st.write("Error en el envío")
             

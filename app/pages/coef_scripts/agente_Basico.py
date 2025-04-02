@@ -85,11 +85,11 @@ class Agente_MySql(metaclass=SingletonMeta):
                             port=int(config.get('Database_Server','port')),
                             database=config.get('Database_Server','database'))
             self.cursor = self.conn.cursor()
-            # logging.info("conexión realizada")
+            logging.info("conexión realizada")
 
         except mysql.connector.Error as e:
             mensaje = "Error conectando a MariaDB Platform: "
-            # logging.error(mensaje, exc_info=True)
+            logging.error(mensaje, exc_info=True)
 
     def isValidConection(self) :
         """
@@ -123,7 +123,7 @@ class Agente_MySql(metaclass=SingletonMeta):
                 self.conn.commit()  # Confirmar cambios si es necesario
             except Exception as e:
                 if sql.split()[0] != "SELECT":
-                    # logging.debug("No se puede hacer commit al ejecutar: " + sql.split()[0], exc_info=True)
+                    logging.debug("No se puede hacer commit al ejecutar: " + sql.split()[0], exc_info=True)
                     pass
             # Verificar si la consulta devuelve resultados
             if self.cursor.description is not None:  
@@ -134,7 +134,7 @@ class Agente_MySql(metaclass=SingletonMeta):
             self.cursor = self.conn.cursor()
 
         except mysql.connector.Error as e:
-            # logging.warning("Error en MySQL: ", exc_info=True)
+            logging.warning("Error en MySQL: ", exc_info=True)
             return None
 
     def ejecutarMuchos(self,sql,listaarg):
@@ -157,9 +157,9 @@ class Agente_MySql(metaclass=SingletonMeta):
             return self.cursor.rowcount  # Devolver cantidad de filas afectadas
 
         except mysql.connector.Error as e:
-            # logging.error(f"Error en MySqlAgent.executemany(): {e}", exc_info=True)
+            logging.error(f"Error en MySqlAgent.executemany(): {e}", exc_info=True)
             if listaarg:
-                pass# logging.debug(f"Primer argumento fallido: {listaarg[0]}")
+                logging.debug(f"Primer argumento fallido: {listaarg[0]}")
             return None  # Indicar error sin lanzar excepción
 
     def  commitTransaction(self):
@@ -185,7 +185,7 @@ class Agente_MySql(metaclass=SingletonMeta):
 
         except Exception as e :
             mensaje = "Excepcion MySqlAgent.commitTransaction: "
-            # logging.info(mensaje, exc_info=True)
+            logging.info(mensaje, exc_info=True)
             pass
         
         return
@@ -214,5 +214,5 @@ class Agente_MySql(metaclass=SingletonMeta):
             
         except Exception as e :
             mensaje = "Error en el MySqlAgent.rollBackTransaction: "
-            # logging.info(mensaje, exc_info=True)
+            logging.info(mensaje, exc_info=True)
 

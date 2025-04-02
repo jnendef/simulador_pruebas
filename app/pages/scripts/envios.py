@@ -1,6 +1,5 @@
 from pages.coef_scripts.agente_Basico import Agente_MySql
 import streamlit as st
-# import logging
 # import pandas as pd
 
 # Envio de la informacion de la comunidad
@@ -80,7 +79,4 @@ def envioDatos(comunidad,fotovoltaicos,eolicos,baterias,usuarios,proceso):
         envioUsr(agente,idComunidad,usuarios)
     if any(proceso) and idComunidad>0:
         start = envioPro(agente,idComunidad,proceso)
-    
-    # logging.info("Hora: "+str(start)+" del tipo " + str(type(start)))
-    # logging.info("ID Comunidad: "+str(idComunidad))
     return idComunidad,start
