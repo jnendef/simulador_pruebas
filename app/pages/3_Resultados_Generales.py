@@ -24,18 +24,20 @@ st.markdown("# Análisis de Comunidad")
 meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
 
 st.write("Zaragoza, "+str(dt.datetime.today().day)+" de "+meses[dt.datetime.today().month-1]+" de "+str(dt.datetime.today().year))
+try:
+    st.markdown("## Comunidad "+str(st.session_state.nComunidad))
 
-st.markdown("## Comunidad "+str(st.session_state.nComunidad))
+    introduccion()
 
-introduccion()
+    st.markdown("## Simulación para el año "+str(st.session_state.anyo))
 
-st.markdown("## Simulación para el año "+str(st.session_state.anyo))
+    desarrollo()
 
-desarrollo()
+    if st.session_state.idComunidad>0:
+        contenido_graficos()
+    else:
+        st.markdown("# Realice la simulación para obtener los resultados para su comunidad")
 
-if st.session_state.idComunidad>0:
-    contenido_graficos()
-else:
+    desenlace()
+except:
     st.markdown("# Realice la simulación para obtener los resultados para su comunidad")
-
-desenlace()

@@ -32,8 +32,11 @@ st.sidebar.markdown(
 )
 
 tab1, tab2, tab3, tab4, tab5, tab6, tab7= st.tabs(["Fotovoltaicos","Eólicos", "Baterías", "Usuarios","Coeficientes", "Confirmación", "Simular"])
+try:
+    ce = any(st.session_state["comunidades"])
+except:
+    ce = False
 
-ce = any(st.session_state["comunidades"])
 fv = False
 eo = False
 gen = False
@@ -41,23 +44,29 @@ bt = False
 usr = False
 sub = False
 
-location = None
-comunidadEnerg = st.session_state.comunidad
-dfComu = st.session_state.comunidadDF
-
 if ce:
+    location = None
+    comunidadEnerg = st.session_state.comunidad
+    dfComu = st.session_state.comunidadDF
+
     with tab1:
-        dfFV, numeroFV, fv = instalacion_fv(ce, fv)
-    
+        try:
+            dfFV, numeroFV, fv = instalacion_fv(ce, fv)
+        except Exception as e:
+            logging.debug("En la fotovoltaica: ", exc_info=True)
+
     with tab2:
-        dfEO, numeroEO, eo = instalacion_eo(ce, eo)
-    
+        try:
+            dfEO, numeroEO, eo = instalacion_eo(ce, eo)
+        except Exception as e:
+            logging.debug("En la eolica: ", exc_info=True)
+            
     with tab3:
         try:
             dfBat, numeroBat = instalacion_bat(ce, fv, eo, gen)
     
         except Exception as e:
-            # .error("En las baterías: ", exc_info=True)
+            logging.debug("En las baterías: ", exc_info=True)
             st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si  el error persiste, consulte los logs o hable con el administrador.")
             
     with tab4:
@@ -116,3 +125,6 @@ if ce:
                 a_zero = ["comunidades","usuarios","fotovolt","eolicos","baterias","usuariosCE"]
                 for i in a_zero:
                     resetear(i)
+
+else:
+    st.markdown("# Introduzca el nombre y localización de su comunidad")

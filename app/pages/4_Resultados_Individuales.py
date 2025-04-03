@@ -89,4 +89,4 @@ try:
             unsafe_allow_html=True,
         )
 except:
-    pass
+    st.markdown("# Realice la simulación para obtener los resultados para su comunidad")
