@@ -9,8 +9,6 @@ import base64
 import numpy as np
 import pandas as pd
 
-from pages.coef_scripts.agente_Basico import Agente_MySql
-
 from datetime import datetime, timedelta
 
 from pages.pages_content.page4 import obtencion_datos_usr, datos_matriz, preparacion_lista, obtencion_indices, grafico_prod_total

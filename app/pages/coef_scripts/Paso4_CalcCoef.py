@@ -29,7 +29,6 @@ def final1000(agente,fcStart,idComunidad):
     sentenciaUpdate = sentenciaUpdate+ " result = 1000 "
     sentenciaUpdate = sentenciaUpdate+ " WHERE id_energy_community = " + str(idComunidad) + " AND event_id = 40 AND start='"+ fcStart + "'"
     agente.ejecutar(sentenciaUpdate)
-    agente.commitTransaction()
 
     return
 
@@ -43,7 +42,6 @@ def final1001(agente,fcStart,idComunidad):
     sentenciaUpdate = sentenciaUpdate+ " result = 1001 "
     sentenciaUpdate = sentenciaUpdate+ " WHERE id_energy_community = " + str(idComunidad) + " AND event_id = 40 AND start='"+ fcStart + "';"
     agente.ejecutar(sentenciaUpdate)
-    agente.commitTransaction()
     
     return
 
@@ -221,43 +219,43 @@ def Paso4(agente, Anyo, id_EnergyCommunity, bisiesto):
         
         return proceso, None
     
-if __name__ == "__main__":
-    path = os.getcwd()
-    direc = os.path.join(path,"logs")
-    if not os.path.exists(direc):
-        try:
-            os.mkdir(direc)
-        except Exception as e:
-            direc = path
+# if __name__ == "__main__":
+#     path = os.getcwd()
+#     direc = os.path.join(path,"logs")
+#     if not os.path.exists(direc):
+#         try:
+#             os.mkdir(direc)
+#         except Exception as e:
+#             direc = path
     
-    logging.basicConfig(
-        level=logging.DEBUG,
-        handlers=[RotatingFileHandler(os.path.join(direc,'LEADING_PASO4_Output.log'), maxBytes=1000000, backupCount=4)],
-        format='%(asctime)s %(levelname)s %(message)s',
-        datefmt='%m/%d/%Y %I:%M:%S %p')
+#     logging.basicConfig(
+#         level=logging.DEBUG,
+#         handlers=[RotatingFileHandler(os.path.join(direc,'LEADING_PASO4_Output.log'), maxBytes=1000000, backupCount=4)],
+#         format='%(asctime)s %(levelname)s %(message)s',
+#         datefmt='%m/%d/%Y %I:%M:%S %p')
 
-    #Paso 0: Parametros generales de la simulacion
-    #Obtenemos el agente de base de datos que utilizaremos durante toda la ejecucion
-    agenteEjecucionMySql = aB.Agente_MySql()
-    # Obtenemos el anyo actual
+#     #Paso 0: Parametros generales de la simulacion
+#     #Obtenemos el agente de base de datos que utilizaremos durante toda la ejecucion
+#     agenteEjecucionMySql = aB.Agente_MySql()
+#     # Obtenemos el anyo actual
 
-    currentDateTime = tiem.now()
-    date_year = currentDateTime.date()
-    anyoDatosGuardarComunidad = date_year.strftime("%Y")
+#     currentDateTime = tiem.now()
+#     date_year = currentDateTime.date()
+#     anyoDatosGuardarComunidad = date_year.strftime("%Y")
     
-    # Condicion de anyo bisiesto: el resto tiene que ser 0
+#     # Condicion de anyo bisiesto: el resto tiene que ser 0
     
-    resto = int(anyoDatosGuardarComunidad) % 4
-    bisiesto = False
-    if resto == 0:
-        bisiesto = True
+#     resto = int(anyoDatosGuardarComunidad) % 4
+#     bisiesto = False
+#     if resto == 0:
+#         bisiesto = True
 
-    ids_Comunidades = ComunidadesEnergeticasServicio.compruebaSiEjecutar(agenteEjecucionMySql)
-    for ids in ids_Comunidades:
-        try:
-            Paso4(agenteEjecucionMySql,anyoDatosGuardarComunidad,ids, bisiesto)
-        except Exception as e:
-            pass
-            logging.error("Fallo Paso 4: ", exc_info=True)
+#     ids_Comunidades = ComunidadesEnergeticasServicio.compruebaSiEjecutar(agenteEjecucionMySql)
+#     for ids in ids_Comunidades:
+#         try:
+#             Paso4(agenteEjecucionMySql,anyoDatosGuardarComunidad,ids, bisiesto)
+#         except Exception as e:
+#             pass
+#             logging.error("Fallo Paso 4: ", exc_info=True)
     
-    agenteEjecucionMySql.cursor.close()
+#     agenteEjecucionMySql.cursor.close()

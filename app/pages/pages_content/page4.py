@@ -9,7 +9,6 @@ import pandas as pd
 
 from pages.coef_scripts.agente_Basico import Agente_MySql
 
-
 diccioTipo = {  "Apartamento_1adulto_calef_electrica" : 6,
                 "Apartamento_1adulto_calef_gas" : 7,
                 "Piso_2adultos_1-2niños_calef_electrica_aire_ac" : 9,
@@ -39,16 +38,16 @@ tipologiaSB = {
 }
 
 def obtencion_datos_usr():
-    agente = Agente_MySql()
-    sentenciaSQLusr = "SELECT * FROM leading_db.user WHERE id_energy_community = "+str(st.session_state.idComunidad)+";"
-    usuarios = agente.ejecutar(sentenciaSQLusr)
+    with Agente_MySql() as agente:
+        sentenciaSQLusr = "SELECT * FROM leading_db.user WHERE id_energy_community = "+str(st.session_state.idComunidad)+";"
+        usuarios = agente.ejecutar(sentenciaSQLusr)
 
-    datosUsr = []
+        datosUsr = []
 
-    for i in usuarios:
-        sentenciaSQLdatos = "SELECT * FROM leading_db.user_data WHERE id_user = "+str(i[0])+";"
-        datos = agente.ejecutar(sentenciaSQLdatos)
-        datosUsr.append((i[10],datos))
+        for i in usuarios:
+            sentenciaSQLdatos = "SELECT * FROM leading_db.user_data WHERE id_user = "+str(i[0])+";"
+            datos = agente.ejecutar(sentenciaSQLdatos)
+            datosUsr.append((i[10],datos))
 
     return datosUsr
 

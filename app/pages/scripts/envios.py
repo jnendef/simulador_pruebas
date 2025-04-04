@@ -63,20 +63,20 @@ def envioPro(agente,idComunidad,proceso):
 
 # Envio de informacion a la base de datos
 def envioDatos(comunidad,fotovoltaicos,eolicos,baterias,usuarios,proceso):
-    agente = Agente_MySql()
-    idComunidad = 0
-    start = ""
-    if any(comunidad):
-        idComunidad = envioComu(agente,comunidad)
-        st.write("ID de la comunidad: ", idComunidad)
-    if any(fotovoltaicos) and idComunidad>0:
-        envioGen(agente,fotovoltaicos,idComunidad,1)
-    if any(eolicos) and idComunidad>0:
-        envioGen(agente,eolicos,idComunidad,2)
-    if any(baterias) and idComunidad>0:
-        envioBat(agente,idComunidad,baterias)
-    if any(usuarios) and idComunidad>0:
-        envioUsr(agente,idComunidad,usuarios)
-    if any(proceso) and idComunidad>0:
-        start = envioPro(agente,idComunidad,proceso)
-    return idComunidad,start
+    with Agente_MySql() as agente:
+        idComunidad = 0
+        start = ""
+        if any(comunidad):
+            idComunidad = envioComu(agente,comunidad)
+            st.write("ID de la comunidad: ", idComunidad)
+        if any(fotovoltaicos) and idComunidad>0:
+            envioGen(agente,fotovoltaicos,idComunidad,1)
+        if any(eolicos) and idComunidad>0:
+            envioGen(agente,eolicos,idComunidad,2)
+        if any(baterias) and idComunidad>0:
+            envioBat(agente,idComunidad,baterias)
+        if any(usuarios) and idComunidad>0:
+            envioUsr(agente,idComunidad,usuarios)
+        if any(proceso) and idComunidad>0:
+            start = envioPro(agente,idComunidad,proceso)
+        return idComunidad,start

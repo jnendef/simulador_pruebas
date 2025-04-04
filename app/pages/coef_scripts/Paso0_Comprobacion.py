@@ -224,40 +224,40 @@ def comprobacionDb(agente,records):
         return False,datos,datosUs,datosCe,datosGen,datosBat
 
 
-#Inicio del programa principal para la deteccion de ausencias en la base de datos
-if __name__ == "__main__":
-    path = os.getcwd()
-    direc = os.path.join(path,"logs\\LEADING_PASO0_Output.log")
-    logging.basicConfig(
-        level=logging.DEBUG,
-        handlers=[RotatingFileHandler(direc, maxBytes=1000000, backupCount=4)],
-        format='%(asctime)s %(levelname)s %(message)s',
-        datefmt='%m/%d/%Y %I:%M:%S %p')
+# #Inicio del programa principal para la deteccion de ausencias en la base de datos
+# if __name__ == "__main__":
+#     path = os.getcwd()
+#     direc = os.path.join(path,"logs\\LEADING_PASO0_Output.log")
+#     logging.basicConfig(
+#         level=logging.DEBUG,
+#         handlers=[RotatingFileHandler(direc, maxBytes=1000000, backupCount=4)],
+#         format='%(asctime)s %(levelname)s %(message)s',
+#         datefmt='%m/%d/%Y %I:%M:%S %p')
 
-    #Paso 0: Parametros generales de la simulación
-    #Obtenemos el agente de base de datos que utilizaremos durante toda la ejecución
-    agenteEjecucionMySql = aB.Agente_MySql()
-    # Obtenemos el anyo actual
+#     #Paso 0: Parametros generales de la simulación
+#     #Obtenemos el agente de base de datos que utilizaremos durante toda la ejecución
+#     agenteEjecucionMySql = aB.Agente_MySql()
+#     # Obtenemos el anyo actual
 
-    currentDateTime = tiem.now()
-    date_year = currentDateTime.date()
-    anyoDatosGuardarComunidad = date_year.strftime("%Y")
+#     currentDateTime = tiem.now()
+#     date_year = currentDateTime.date()
+#     anyoDatosGuardarComunidad = date_year.strftime("%Y")
     
-    # Condicion de anyo bisiesto: el resto tiene que ser 0
+#     # Condicion de anyo bisiesto: el resto tiene que ser 0
     
-    resto = int(anyoDatosGuardarComunidad) % 4
-    bisiesto = False
-    if resto == 0:
-        bisiesto = True
+#     resto = int(anyoDatosGuardarComunidad) % 4
+#     bisiesto = False
+#     if resto == 0:
+#         bisiesto = True
     
-    records = obtInfoInicio(agenteEjecucionMySql)
+#     records = obtInfoInicio(agenteEjecucionMySql)
 
-    for rc in records:
-        okey,datos,datosUs,datosCe,datosGen,datosBat = comprobacionDb(agenteEjecucionMySql,rc)
-        if not okey:
-            print("Error, mire los logs")
-            logging.warning("Algo fue mal en la comunidad: "+str(rc[1]))
-        else:
-            print("Todo en orden")
+#     for rc in records:
+#         okey,datos,datosUs,datosCe,datosGen,datosBat = comprobacionDb(agenteEjecucionMySql,rc)
+#         if not okey:
+#             print("Error, mire los logs")
+#             logging.warning("Algo fue mal en la comunidad: "+str(rc[1]))
+#         else:
+#             print("Todo en orden")
 
-    agenteEjecucionMySql.cursor.close()
+#     agenteEjecucionMySql.cursor.close()

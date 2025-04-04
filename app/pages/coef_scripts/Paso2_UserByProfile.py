@@ -28,7 +28,6 @@ def final1000(agente,fcStart,idComunidad):
     sentenciaUpdate = sentenciaUpdate+ " result = 1000 "
     sentenciaUpdate = sentenciaUpdate+ " WHERE id_energy_community = " + str(idComunidad) + " AND event_id = 30 AND start='"+ fcStart + "'"
     agente.ejecutar(sentenciaUpdate)
-    agente.commitTransaction()
 
     return
 
@@ -42,7 +41,6 @@ def final1001(agente,fcStart,idComunidad):
     sentenciaUpdate = sentenciaUpdate+ " result = 1001 "
     sentenciaUpdate = sentenciaUpdate+ " WHERE id_energy_community = " + str(idComunidad) + " AND event_id = 30 AND start='"+ fcStart + "';"
     agente.ejecutar(sentenciaUpdate)
-    agente.commitTransaction()
     
     return
 
@@ -103,7 +101,6 @@ def usuariosXCUPS(agente,DescripcionPerfil,idComunidad):
         SentenciaActualizarFinal = SentenciaActualizar + SentenciaSet + SentenciaWhere
 
         agente.cursor.execute(SentenciaActualizarFinal)
-        agente.commitTransaction
         InsertarDatos = False
         # Si no existe, generamos un nuevo registro en el que añadimos el cups del perfil
 
@@ -281,7 +278,6 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
         sentenciaInsertNuevoRegistroProcess = "INSERT INTO leading_db.energy_community_process  (id_energy_community, event_id, start) VALUES ( "
         sentenciaInsertNuevoRegistroProcess = sentenciaInsertNuevoRegistroProcess + str (idComunidad) + ", 30, '" + fcStart + "') "
         agente.ejecutar(sentenciaInsertNuevoRegistroProcess)
-        agente.commitTransaction()
 
         # Declaramos el año para el cual crearemos los datos de perfiles (se coge del timestamp)
         if anyo == 0:
@@ -380,7 +376,6 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
         sentenciaInsertNuevoDatoPerfil = "INSERT INTO leading_db.user_data (id_user, timestamp, consumption, partition_coefficient, partition_energy, partition_surplus_energy) VALUES(%s, %s, %s, %s, %s, %s)"
                 
         agente.ejecutarMuchos(sentenciaInsertNuevoDatoPerfil, VectorDatosConsumo)
-        agente.commitTransaction()
 
         # Indicamos que la ejecución ha acabado correctamente
         final1000(agente,fcStart,idComunidad)
@@ -396,42 +391,42 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
     else:
         return proceso, VectorDatosConsumo
     
-if __name__ == "__main__":
-    path = os.getcwd()
-    direc = os.path.join(path,"logs")
-    if not os.path.exists(direc):
-        try:
-            os.mkdir(direc)
-        except Exception as e:
-            direc = path
+# if __name__ == "__main__":
+#     path = os.getcwd()
+#     direc = os.path.join(path,"logs")
+#     if not os.path.exists(direc):
+#         try:
+#             os.mkdir(direc)
+#         except Exception as e:
+#             direc = path
     
-    logging.basicConfig(
-        level=logging.DEBUG,
-        handlers=[RotatingFileHandler(os.path.join(direc,'LEADING_PASO2_Output.log'), maxBytes=1000000, backupCount=4)],
-        format='%(asctime)s %(levelname)s %(message)s',
-        datefmt='%m/%d/%Y %I:%M:%S %p')
+#     logging.basicConfig(
+#         level=logging.DEBUG,
+#         handlers=[RotatingFileHandler(os.path.join(direc,'LEADING_PASO2_Output.log'), maxBytes=1000000, backupCount=4)],
+#         format='%(asctime)s %(levelname)s %(message)s',
+#         datefmt='%m/%d/%Y %I:%M:%S %p')
     
-    #Paso 0: Parametros generales de la simulación
-    #Obtenemos el agente de base de datos que utilizaremos durante toda la ejecución
-    agenteEjecucionMySql = aB.Agente_MySql()
-    # Obtenemos el anyo actual
+#     #Paso 0: Parametros generales de la simulación
+#     #Obtenemos el agente de base de datos que utilizaremos durante toda la ejecución
+#     agenteEjecucionMySql = aB.Agente_MySql()
+#     # Obtenemos el anyo actual
 
-    currentDateTime = datetime.datetime.now()
-    date_year = currentDateTime.date()
-    anyoDatosGuardarComunidad = date_year.strftime("%Y")
+#     currentDateTime = datetime.datetime.now()
+#     date_year = currentDateTime.date()
+#     anyoDatosGuardarComunidad = date_year.strftime("%Y")
     
-    # Condicion de anyo bisiesto: el resto tiene que ser 0
+#     # Condicion de anyo bisiesto: el resto tiene que ser 0
     
-    resto = int(anyoDatosGuardarComunidad) % 4
-    bisiesto = False
-    if resto == 0:
-        bisiesto = True
+#     resto = int(anyoDatosGuardarComunidad) % 4
+#     bisiesto = False
+#     if resto == 0:
+#         bisiesto = True
 
-    ids_Comunidades = compruebaSiEjecutar(agenteEjecucionMySql)
-    for ids in ids_Comunidades:
-        try:
-            Paso2(agenteEjecucionMySql,ids, bisiesto, date_year.year)
-        except Exception as e:
-            logging.error("Fallo Paso 2: ", exc_info=True)
+#     ids_Comunidades = compruebaSiEjecutar(agenteEjecucionMySql)
+#     for ids in ids_Comunidades:
+#         try:
+#             Paso2(agenteEjecucionMySql,ids, bisiesto, date_year.year)
+#         except Exception as e:
+#             logging.error("Fallo Paso 2: ", exc_info=True)
 
-    agenteEjecucionMySql.cursor.close()
+#     agenteEjecucionMySql.cursor.close()

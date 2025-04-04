@@ -32,7 +32,7 @@ class SingletonMeta(type):
             cls._instances[cls] = instance
         return cls._instances[cls]
 
-class Agente_MySql(metaclass=SingletonMeta):
+class Agente_MySql():
     """
     author: fgregorio
 
@@ -70,7 +70,8 @@ class Agente_MySql(metaclass=SingletonMeta):
             1. conn
             2. cursor
         """
-        
+
+        logging.info("Inicializando Agente_Basico...")
         direc = os.path.dirname(os.path.realpath(__file__))
         archivo2 = direc+"/"+ archivo
         config = configparser.ConfigParser()
@@ -83,13 +84,38 @@ class Agente_MySql(metaclass=SingletonMeta):
                             password=config.get('Database_Server','password'),
                             host=config.get('Database_Server','host'),
                             port=int(config.get('Database_Server','port')),
-                            database=config.get('Database_Server','database'))
-            self.cursor = self.conn.cursor()
+                            database=config.get('Database_Server','database'),
+                            autocommit=True)  # Activa autocommit
+            try:
+                self.cursor = self.conn.cursor()
+            except Exception as e:
+                logging.debug("Conexione sin realizar:", exc_info=True)
             logging.info("conexión realizada")
 
         except mysql.connector.Error as e:
             mensaje = "Error conectando a MariaDB Platform: "
             logging.error(mensaje, exc_info=True)
+
+    # Método `__enter__` para soportar `with`
+    def __enter__(self):   
+        logging.info("Entrando en el contexto de Agente_Basico")
+        if self.conn is None:
+            raise Exception("No hay conexión disponible al entrar en el contexto")
+        
+        return self  # Devuelve la instancia para usarla en `with ... as agente:`
+    
+    # Método `__exit__` para cerrar conexión al salir del `with`
+    def __exit__(self, exc_type, exc_value, traceback):
+        logging.debug("Saliendo del contexto de Agente_Basico")
+
+        if self.cursor:
+            self.cursor.close()
+
+        if self.conn:
+            self.conn.close()
+            logging.debug("🔴 Conexión cerrada")
+
+        logging.info("Conexión cerrada")
 
     def isValidConection(self) :
         """
@@ -216,3 +242,8 @@ class Agente_MySql(metaclass=SingletonMeta):
             mensaje = "Error en el MySqlAgent.rollBackTransaction: "
             logging.info(mensaje, exc_info=True)
 
+    def cierreCursor(self):
+        self.cursor.close()
+
+    def cierreConexion(self):
+        self.conn.close()

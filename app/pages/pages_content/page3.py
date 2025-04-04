@@ -81,17 +81,17 @@ def desenlace():
         )
 
 def obtencion_info_usuarios():
-    agente = Agente_MySql()
-    sentenciaSQLusr = "SELECT * FROM leading_db.user WHERE id_energy_community = "+str(st.session_state.idComunidad)+";"
-    usuarios = agente.ejecutar(sentenciaSQLusr)
+    with Agente_MySql() as agente:
+        sentenciaSQLusr = "SELECT * FROM leading_db.user WHERE id_energy_community = "+str(st.session_state.idComunidad)+";"
+        usuarios = agente.ejecutar(sentenciaSQLusr)
 
-    datosUsr = []
+        datosUsr = []
 
-    for i in usuarios:
-        sentenciaSQLdatos = "SELECT * FROM leading_db.user_data WHERE id_user = "+str(i[0])+";"
-        datos = agente.ejecutar(sentenciaSQLdatos)
-        datosUsr.append((i[10],datos))
-    
+        for i in usuarios:
+            sentenciaSQLdatos = "SELECT * FROM leading_db.user_data WHERE id_user = "+str(i[0])+";"
+            datos = agente.ejecutar(sentenciaSQLdatos)
+            datosUsr.append((i[10],datos))
+        
     return datosUsr
 
 def paso_matriz(datosUsr):

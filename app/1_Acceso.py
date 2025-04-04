@@ -27,7 +27,7 @@ if not os.path.exists(direc):
 # logger = logging.getLogger('1_Acceso')
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     handlers=[RotatingFileHandler(os.path.join(direc,"logsimulador.log"), maxBytes=1000000, backupCount=4)],
     format='%(asctime)s %(levelname)s %(message)s',
     datefmt='%m/%d/%Y %I:%M:%S %p')
