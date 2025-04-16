@@ -194,7 +194,7 @@ def Paso3(agente, idComunidad):
         """
 
         # Ejecutamos la consulta
-        registrosDatosGeneracionComunidad = agente.ejecutar (sql_aeileading_total_generation_community)
+        registrosDatosGeneracionComunidad = agente.ejecutar(sql_aeileading_total_generation_community)
 
         # Paso 2.2.- Recuperamos un vector con todos los consumos del año
 
@@ -213,7 +213,7 @@ def Paso3(agente, idComunidad):
 
         # Paso 2.3.- Deben coincidir el número de horas de generación y consumos
         if(len(registrosDatosConsumosComunidad)!=len(registrosDatosGeneracionComunidad)):
-            logging.info("ERROR EN EL PASO 3: No coincide el número de registros de generación respecto a los de consumo")
+            logging.error("ERROR EN EL PASO 3: No coincide el número de registros de generación respecto a los de consumo")
             return proceso,VectorDatosBaterias
 
         # Paso 3: Creamos una instancia con el estado inicial de la batería

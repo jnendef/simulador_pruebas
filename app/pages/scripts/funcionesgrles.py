@@ -26,8 +26,9 @@ def comprobarStrings(mensaje):
     return any(caracter in punctuation for caracter in mensaje)
 
 def camposDataframe(concepto, datos, columnas, add = True):
-    st.session_state[concepto] = actualizarValores(add,datos,st.session_state[concepto])
-    
+    if add:
+        st.session_state[concepto] = st.session_state[concepto].append(datos)
+
     info = st.session_state[concepto]
     df = pd.DataFrame(info, columns=columnas)
     
