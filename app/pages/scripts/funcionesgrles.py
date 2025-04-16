@@ -27,8 +27,8 @@ def comprobarStrings(mensaje):
 
 def camposDataframe(concepto, datos, columnas, add = True):
     if add:
-        st.session_state[concepto] = st.session_state[concepto].append(datos)
-
+        st.session_state[concepto].append(datos)
+        
     info = st.session_state[concepto]
     df = pd.DataFrame(info, columns=columnas)
     

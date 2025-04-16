@@ -18,6 +18,7 @@ def creacion_CE(geolocator,ce):
     ubicacion = st.text_input("Ubicación *",help="Poner el nombre de la ciudad o pueblo. Por ejemplo: Zaragoza.")
     coste = 100000.00
     amortizacion = 1000.00
+    dfComu = pd.DataFrame([])
 
     deshabilitadoCE = True
     gralComu = None
@@ -35,12 +36,10 @@ def creacion_CE(geolocator,ce):
 
     comunidadEnerg = {}
     colums = ("Nombre","Ubicacion","Coste","Amortizacion")
-    addce = st.button("Crea comunidad",type="primary", disabled = deshabilitadoCE)
-    dfComu = pd.DataFrame([])
-    if addce:
+    if st.button("Crea comunidad",type="primary", disabled = deshabilitadoCE):
         try:
             if gralComu != None:
-                dfComu = camposDataframe("comunidades",gralComu,colums,addce)
+                dfComu = camposDataframe("comunidades",gralComu,colums)
                 conceptos = ["name", "location", "inst_cost", "inst_monthly_fee"]
                 for i,j in zip(conceptos,gralComu):
                     comunidadEnerg[i] = j
@@ -54,9 +53,9 @@ def creacion_CE(geolocator,ce):
             try:
                 st.session_state.localizador = geolocator.geocode(ubicacion)
             except:
-                pass
+                logging.debug("No se ha podido incluir la localización en la creación de la CE.")
         except Exception as e:
-            pass    
+            logging.error("No se ha podido incluir la comunidad: ", exc_info=True)    
     
     return comunidadEnerg, dfComu, ce
 
@@ -435,10 +434,6 @@ def confirmacion(datos):
             currentDateTime = dt.datetime.now()
             start = currentDateTime.strftime('%Y-%m-%d %H:%M:%S')
             st.session_state.procesosCurso = start
-            st.write(any(comunidadEnerg)) 
-            st.write(any(fotovoltaicos), fotovoltaicos)
-            st.write(any(eolicos),eolicos)
-            st.write(any(usuarios),usuarios)
             if any(comunidadEnerg) and (any(fotovoltaicos) or any(eolicos)) and any(usuarios):
                 try:
                     st.session_state.datoscomunidad["max_participation"]=comunidadEnerg["max_participation"]
