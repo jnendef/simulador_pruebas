@@ -350,7 +350,7 @@ def confirmacion(datos):
     eolicos = []
     try:
         auxEO = st.session_state["eolicos"].copy()
-        if any(auxFV):
+        if any(auxEO):
             for i in auxEO:
                 diccioEOaux = {}
                 for j,k in zip(conceptos,i):
@@ -435,7 +435,10 @@ def confirmacion(datos):
             currentDateTime = dt.datetime.now()
             start = currentDateTime.strftime('%Y-%m-%d %H:%M:%S')
             st.session_state.procesosCurso = start
-
+            st.write(any(comunidadEnerg)) 
+            st.write(any(fotovoltaicos), fotovoltaicos)
+            st.write(any(eolicos),eolicos)
+            st.write(any(usuarios),usuarios)
             if any(comunidadEnerg) and (any(fotovoltaicos) or any(eolicos)) and any(usuarios):
                 try:
                     st.session_state.datoscomunidad["max_participation"]=comunidadEnerg["max_participation"]
