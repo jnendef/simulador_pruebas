@@ -294,13 +294,14 @@ def registro_usuarios(ce, gen, usr):
 def registro_coeficientes(numeroUsers,comunidadEnerg):
     st.info("Nota aclaratoria: Puede dejar los coeficientes de reparto como están o modificar los valores máximo, mínimo y de pobreza energética para calcular el reparto de la energía producida. Si todo está correcto, puede pasar a la siguiente pestaña: Confirmación.")
     st.header("Coeficientes de reparto")
+    
+    pobrezaE = st.number_input("Porcentaje para pobreza energética",min_value=0.0, max_value=100.0,step=1.0)
     try:
-        valorAux = 100.0/numeroUsers
+        valorAux = (100.0-pobrezaE)/numeroUsers
     except ZeroDivisionError:
         valorAux = 50.0
     coefMax = st.number_input("Coeficiente máximo", min_value = valorAux, max_value = 100.0,value=100.0,step=1.0)
     coefmin = st.number_input("Coeficiente mínimo", min_value = 0.0, max_value = valorAux,value=0.0,step=1.0)
-    pobrezaE = st.number_input("Porcentaje para pobreza energética",min_value=0.0, max_value=100.0,step=1.0)
 
     comunidadEnerg["max_participation"]=coefMax
     comunidadEnerg["min_participation"]=coefmin
