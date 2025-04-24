@@ -10,13 +10,12 @@ import numpy as np
 #
 # Objeto DTO (data object transfer).
 # 
-# @author fgregorio
-#
+# @author inicial fgregorio
+# @modificaciones y extras jnaveiro
 # @traductor jnaveiro
 #
 
-
-def coeficientConsumMax(Coef, bmax,pobreza):
+def coeficientConsumMax(Coef, bmax, pobreza):
     Cmax=np.max(Coef)
     if np.sum(Coef) == 0.0:
         suma = 1.0
@@ -24,10 +23,13 @@ def coeficientConsumMax(Coef, bmax,pobreza):
         suma = np.sum(Coef)
         
     control= Cmax/suma
+    control *= (1-pobreza)
     n= len(Coef)
     betas = n*bmax - (1-pobreza)
 
-    if control>bmax and betas >= 0.0:
+    cumple = control>bmax
+
+    if  cumple and betas >= 0.0:
         Caux = Cmax - Coef
 
         if np.sum(Caux) == 0.0:
@@ -38,6 +40,7 @@ def coeficientConsumMax(Coef, bmax,pobreza):
         cc = Caux/suma2
         cc *= (-1*betas) 
         cc += bmax
+
     else:
         if np.max(Coef) <= 0.0:
             cc = (np.ones(len(Coef))/(len(Coef)))*(1-pobreza)
@@ -46,7 +49,7 @@ def coeficientConsumMax(Coef, bmax,pobreza):
         
     return cc
 
-def coeficientConsumMin(Consum, bmin,pobreza):
+def coeficientConsumMin(Consum, bmin, pobreza):
     Cmin=np.min(Consum)
     if np.sum(Consum) == 0.0:
         suma = 1.0
@@ -54,11 +57,14 @@ def coeficientConsumMin(Consum, bmin,pobreza):
         suma = np.sum(Consum)
         
     control= Cmin/suma
+    control *= (1-pobreza)
     n= len(Consum)
     betas=(1-pobreza)-bmin*n
+    
+    cumple = control<bmin
 
-    if control<bmin and betas >= 0.0:
-        Caux=Consum - Cmin
+    if  cumple and betas >= 0.0:
+        Caux= Consum - Cmin
 
         if np.sum(Caux) == 0.0:
             Caux[:] = 0.1
@@ -157,16 +163,20 @@ class ComunidadEnergeticaDTO:
             
             MatrizConsumos[:,:,it_cliente] = matrizConsumos[:,:]
         
+        minimo = 0.01 * self.cuotaParticipacion_min
+        maxima = 0.01 * self.cuotaParticipacion_max
+        pobreza = 0.01*self.getPorcentajeDedicadoPobrezaEnergetica()
+
+        logging.debug("coeficiente minimo: "+str(minimo))
+        logging.debug("coeficiente maximo: "+str(maxima))
+        logging.debug("coeficiente pobreza: "+str(pobreza))
+
         for it_dia in range(dias):
             for it_hora in range(horas):
-                minimo = 0.01 * self.cuotaParticipacion_min
-                maxima = 0.01 * self.cuotaParticipacion_max
-                pobreza = 0.01*self.getPorcentajeDedicadoPobrezaEnergetica()
                 MatrizBetas = combinado(MatrizConsumos[it_dia,it_hora,:] , minimo, maxima, pobreza)
 
                 for it_cliente in range(len(usuariosComunidad)):
                     usuariosComunidad[it_cliente].getCoeficientesReparto()[it_dia][it_hora] = 100*MatrizBetas[it_cliente]
-
 
     def obtenerCoeficientesReparto_normalizadoByDemandaEnergia (self):
         """
