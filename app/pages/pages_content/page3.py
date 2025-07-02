@@ -142,20 +142,20 @@ def texto_propio():
 
     st.markdown(texto)
     
-    st.markdown(" En el siguiente gráfico de barras se pueden apreciar los valores de los consumos, reparto y excedentes, en valores promedio, para cada usuario de la comunidad, en kWh, para el año especificado en la simulación("+str(st.session_state.anyo)+").")
+    st.markdown(" En el siguiente gráfico de barras se pueden apreciar los valores de los consumos, reparto autoconsumida, en valores promedio, para cada usuario de la comunidad, en kWh, para el año especificado en la simulación("+str(st.session_state.anyo)+").")
 
 def grafico_tabla_consumos(indicesUsr,mConsumos,mReparto,mExcedentes):
     dfCon = pd.DataFrame(mConsumos,index=indicesUsr,columns=["Consumos [kWh]"])
     dfRep = pd.DataFrame(mReparto,index=indicesUsr,columns=["Generación Correspondiente [kWh]"])
-    dfExc = pd.DataFrame(mExcedentes,index=indicesUsr,columns=["Excedentes [kWh]"])
+    dfExc = pd.DataFrame(mExcedentes,index=indicesUsr,columns=["Autoconsumida [kWh]"])
     dfF = dfExc.join(dfRep)
     dfF = dfF.join(dfCon)
     dfF2 = dfF.copy()
     dfF2.index = [i for i in range(len(mConsumos))]
 
     st.markdown("")
-    st.markdown("*Gráfico 1. Valores promedios de consumo, generación correspondiente y excedentes*")
-    st.bar_chart(dfF2, horizontal = False, height = 500, width = 500, stack=False,color= ["#4343FF", "#28D06C", "#FF9943"], x_label="Usuarios", y_label="kWh")
+    st.markdown("*Gráfico 1. Valores promedios de consumo, generación correspondiente y autoconsumida*")
+    st.bar_chart(dfF2, horizontal = False, height = 500, width = 500, stack=False,color= [ "#28D06C", "#4343FF", "#FF9943"], x_label="Usuarios", y_label="kWh")
 
     st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
     st.data_editor(
@@ -170,7 +170,7 @@ def grafico_tabla_consumos(indicesUsr,mConsumos,mReparto,mExcedentes):
                     hide_index=False,
                     height = 43 * len(mConsumos),
                 )
-    st.markdown("*Tabla 1. Valores promedios de consumo, generación correspondiente y excedentes*")
+    st.markdown("*Tabla 1. Valores promedios de consumo, generación correspondiente y autoconsumida*")
 
 def texto_coef():
     st.markdown("### Coeficientes de reparto")
@@ -222,6 +222,7 @@ def contenido_graficos():
     mCoef = [mDatos[i,:,1].mean(0) for i in range(len(datosUsr))]
     mReparto = [mDatos[i,:,2].sum(0) for i in range(len(datosUsr))]
     mExcedentes = [mDatos[i,:,3].sum(0) for i in range(len(datosUsr))]
+    mAutocons = [mDatos[i,:,2].sum(0) - mDatos[i,:,3].sum(0) for i in range(len(datosUsr))]
 
     # se prepara la lista de usuarios para el desplegable
     indicesUsr = preparacion_desplegable(redListaU)
@@ -233,7 +234,7 @@ def contenido_graficos():
         texto_propio()
 
         # Contenido con graficos con los consumos, reparto y excedentes
-        grafico_tabla_consumos(indicesUsr,mConsumos,mReparto,mExcedentes)
+        grafico_tabla_consumos(indicesUsr,mConsumos,mReparto,mAutocons)
         
         # Texto coeficientes de reparto
         texto_coef()
