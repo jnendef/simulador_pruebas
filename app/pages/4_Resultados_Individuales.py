@@ -33,6 +33,10 @@ st.sidebar.markdown(
 
 st.markdown("# Resultados")
 
+with st.expander("Descarga de la información"):
+    st.write("Este documento permite su descarga en formato PDF haciendo click en los tres puntos de la esquina superior derecha de la página web. Se desplegará un menú donde está la opción de imprimir, que es donde se tendrá la opción de descargarlo en formato PDF.")
+    st.write("También es posible la descarga de los gráficos y las tablas pasando el ratón por la esquina superior derecha del gráfico o de la tabla. En el caso de las tablas aparecerán las opciones de maximizar y tres puntitos que al clickar mostrarán las opciones, entre las que se encuentran el guardar la imagen en formato png. En las tablas al pasar el ratón aparecerán en la esquina superior derecha tres opciones. La primera de esas opciones permite descargar la información de la tabla en formato csv.")
+
 st.write(dt.datetime.today().__format__('%d %b %Y, %I:%M%p'))
 
 try:
