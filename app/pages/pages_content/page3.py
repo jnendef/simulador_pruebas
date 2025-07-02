@@ -219,7 +219,7 @@ def contenido_graficos():
     
     # mDatos[nhoras,nusuarios,(consumos,coeficientes,reparto energetico,excedentes)]
     mConsumos = [round(mDatos[i,:,0].sum(0)) for i in range(len(datosUsr))]
-    mCoef = [round(mDatos[i,:,1].mean(0)) for i in range(len(datosUsr))]
+    mCoef = [round(mDatos[i,:,1].mean(0),4) for i in range(len(datosUsr))]
     mReparto = [round(mDatos[i,:,2].sum(0)) for i in range(len(datosUsr))]
     # mExcedentes = [mDatos[i,:,3].sum(0) for i in range(len(datosUsr))]
     mAutocons = [round(mDatos[i,:,2].sum(0) - mDatos[i,:,3].sum(0)) for i in range(len(datosUsr))]

@@ -120,7 +120,7 @@ def dataframes_datos(start_time, end_time, eleccion, diccioUsr, mDatos):
     horasFin = 24*(end_time-dt.datetime(st.session_state.anyo, 1, 1, 0, 0).date()).days
 
     df0 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,0],columns=["Consumo"])
-    df1 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,1],columns=["Coeficiente"])
+    df1 = pd.DataFrame(np.round(mDatos[diccioUsr[eleccion],horasInicio:horasFin,1],4),columns=["Coeficiente"])
     df2 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,2],columns=["Generación Correspondiente"])
     df3 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,3],columns=["Excedentes"])
     df4 = df2.join(-1*df3)
