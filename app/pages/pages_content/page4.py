@@ -20,21 +20,21 @@ diccioTipo = {  "Apartamento_1adulto_calef_electrica" : 6,
 listaDiccioTipo = list(diccioTipo)
 
 tipologiaSB0 = [
-            "Apartamento un adulto calefacción eléctrica",
-            "Apartamento un adulto calefacción gas",
-            "Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
-            "Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
-            "Piso dos adultos, calefacción gas y AC",
-            "Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
+            "(1924.326 kWh/año) Apartamento un adulto calefacción eléctrica",
+            "( 745.992 kWh/año) Apartamento un adulto calefacción gas",
+            "( 5931.25 kWh/año) Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
+            "(3059.416 kWh/año) Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
+            "(1916.711 kWh/año) Piso dos adultos, calefacción gas y AC",
+            "(3889.858 kWh/año) Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
         ]
 
 tipologiaSB = {
-    6:"Apartamento un adulto calefacción eléctrica",
-    7:"Apartamento un adulto calefacción gas",
-    9:"Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
-    8:"Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
-    12:"Piso dos adultos, calefacción gas y AC",
-    10:"Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
+    6: "(1924.326 kWh/año) Apartamento un adulto calefacción eléctrica",
+    7: "( 745.992 kWh/año) Apartamento un adulto calefacción gas",
+    9: "( 5931.25 kWh/año) Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
+    8: "(3059.416 kWh/año) Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
+    12:"(1916.711 kWh/año) Piso dos adultos, calefacción gas y AC",
+    10:"(3889.858 kWh/año) Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
 }
 
 def obtencion_datos_usr():
@@ -112,7 +112,7 @@ def grafico_prod_total(mDatos,start_time,end_time,indices):
     df = pd.DataFrame(reparto,columns=["Reparto"])
     df.index = indices
     
-    st.bar_chart(df, x_label="Horas", y_label= "kWh")
+    st.bar_chart(df, x_label="Horas", y_label= "kWh",color="#4343FF")
 
 
 def dataframes_datos(start_time, end_time, eleccion, diccioUsr, mDatos):
@@ -134,7 +134,7 @@ def graficado_energia(df0, df2, df3, df4, indices):
     df3.index = indices
     df4.index = indices
 
-    st.bar_chart(df4, x_label="Horas", y_label= "kWh")
+    st.bar_chart(df4, x_label="Horas", y_label= "kWh", color= ["#4343FF", "#28D06C", "#FF9943"])
 
     st.write("Consumo Total en el intervalo kWh: {}".format(str(df0.sum()["Consumo"])[:6]))
     st.write("Reparto Total en el intervalo kWh: {}".format(str(df2.sum()["Reparto"])[:6]))
@@ -142,7 +142,7 @@ def graficado_energia(df0, df2, df3, df4, indices):
 
 def graficado_coef(df1,indices):
     df1.index = indices
-    st.line_chart(df1, x_label = "Horas", y_label = "%")
+    st.line_chart(df1, x_label = "Horas", y_label = "%", color="#4343FF")
     st.write("Coeficiente Promedio en el intervalo en Porcentaje: {}".format(str(df1.mean()["Coeficiente"])[:6]))
 
 def coeficientes_intervalo(start_time, end_time,indices,df1,cups):

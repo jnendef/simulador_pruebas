@@ -6,8 +6,7 @@ import datetime as dt
 
 import base64
 
-import numpy as np
-import pandas as pd
+import logging
 
 from datetime import datetime, timedelta
 
@@ -86,5 +85,7 @@ try:
             ),
             unsafe_allow_html=True,
         )
-except:
+
+except Exception as e:
+    logging.debug("Problema para mostrar info usuarios:", exc_info=True)
     st.markdown("# Realice la simulación para obtener los resultados para su comunidad")

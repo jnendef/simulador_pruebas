@@ -33,12 +33,12 @@ tipologiaSB0 = [
         ]
 
 tipologiaSB = {
-    6:"Apartamento un adulto calefacción eléctrica",
-    7:"Apartamento un adulto calefacción gas",
-    9:"Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
-    8:"Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
-    12:"Piso dos adultos, calefacción gas y AC",
-    10:"Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
+    6: "(1924.326 kWh/año)Apartamento un adulto calefacción eléctrica",
+    7: "(745.992 kWh/año)Apartamento un adulto calefacción gas",
+    9: "(5931.25 kWh/año)Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
+    8: "(3059.416 kWh/año)Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
+    12:"(1916.711 kWh/año)Piso dos adultos, calefacción gas y AC",
+    10:"(3889.858 kWh/año)Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
 }
 
 
@@ -155,7 +155,7 @@ def grafico_tabla_consumos(indicesUsr,mConsumos,mReparto,mExcedentes):
 
     st.markdown("")
     st.markdown("*Gráfico 1. Valores promedios de consumo, reparto y excedentes*")
-    st.bar_chart(dfF2, horizontal = False, height = 500, width = 500, stack=False,color= ["#00C42D", "#2645CB", "#FFC400"], x_label="Usuarios", y_label="kWh")
+    st.bar_chart(dfF2, horizontal = False, height = 500, width = 500, stack=False,color= ["#4343FF", "#28D06C", "#FF9943"], x_label="Usuarios", y_label="kWh")
 
     st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
     st.data_editor(
@@ -186,7 +186,7 @@ def grafico_tabla_coef(mCoef,indicesUsr):
     dfCoef2 = dfCoef.copy()
     dfCoef2.index = [i for i in range(len(indicesUsr))]
     st.markdown("*Gráfico 2. Valores promedios anuales de coeficientes de reparto por usuario*")
-    st.bar_chart(dfCoef2, horizontal = False, height = 500, width = 500, x_label="Usuario", y_label="%",)
+    st.bar_chart(dfCoef2, horizontal = False, height = 500, width = 500,color = "#4343FF", x_label="Usuario", y_label="%",)
 
     st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
 

@@ -254,12 +254,12 @@ def registro_usuarios(ce, gen, usr):
         "Viv_unif_2adultos_1-2niños_calef_gas_aire_ac"]
     
     tipologiaSB = [
-        "Apartamento un adulto calefacción eléctrica",
-        "Apartamento un adulto calefacción gas",
-        "Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
-        "Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
-        "Piso dos adultos, calefacción gas y AC",
-        "Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
+        "(1924.326 kWh/año)Apartamento un adulto calefacción eléctrica",
+        "(745.992 kWh/año)Apartamento un adulto calefacción gas",
+        "(5931.25 kWh/año)Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
+        "(3059.416 kWh/año)Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
+        "(1916.711 kWh/año)Piso dos adultos, calefacción gas y AC",
+        "(3889.858 kWh/año)Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
     ]
 
     st.header("Usuarios")

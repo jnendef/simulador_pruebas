@@ -17,7 +17,7 @@ fastReruns = false
 base = "light"
 primaryColor = "#4343FF"
 backgroundColor = "#FFFFFF"
-textColor = "#020282"
+textColor = "#030033"
 
 [client]
 showErrorDetails = "none"    # Muestra detalles de errores (útil para depuración)
