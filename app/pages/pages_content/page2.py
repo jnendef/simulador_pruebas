@@ -295,13 +295,16 @@ def registro_coeficientes(numeroUsers,comunidadEnerg):
     st.info("Nota aclaratoria: Puede dejar los coeficientes de reparto como están o modificar los valores máximo, mínimo y de pobreza energética para calcular el reparto de la energía producida. Si todo está correcto, puede pasar a la siguiente pestaña: Confirmación.")
     st.header("Coeficientes de reparto")
     
-    pobrezaE = st.number_input("Porcentaje para pobreza energética",min_value=0.0, max_value=100.0,step=1.0)
+    with st.expander("Explicación"):
+        st.write("Los coeficientes de reparto son los factores por los que se multiplica la producción para obtener el reparto de la energía producida. La elección del valor de estos coeficientes es decisión de la comunidad energética y se debe aceptar por parte de los miembros de ésta. En esta simulación se proponen los posibles coeficientes de reparto para que haya el mínimo de excedente vertido a red para sacar el mayor rendimiento a la producción.")
+
+    pobrezaE = st.number_input("Porcentaje para pobreza energética",min_value=0.0, max_value=100.0,step=1.0,help = "El porcentaje dedicado a pobreza energética es el porcentaje de energía que se reservará para los casos seleccionados por la comunidad.")
     try:
         valorAux = (100.0-pobrezaE)/numeroUsers
     except ZeroDivisionError:
         valorAux = 50.0
-    coefMax = st.number_input("Coeficiente máximo", min_value = valorAux, max_value = 100.0,value=100.0,step=1.0)
-    coefmin = st.number_input("Coeficiente mínimo", min_value = 0.0, max_value = valorAux,value=0.0,step=1.0)
+    coefMax = st.number_input("Coeficiente máximo", min_value = valorAux, max_value = 100.0,value=100.0,step=1.0,help="El coeficiente máximo consiste en el valor máximo que puede tomar en la simulación el coeficiente de reparto para un único usuario. Se puede poner esta restricción para el caso de que un usuario tenga un consumo muy superior y evitar que acapare toda la producción.")
+    coefmin = st.number_input("Coeficiente mínimo", min_value = 0.0, max_value = valorAux,value=0.0,step=1.0,help="El coeficiente mínimo consiste en el valor mínimo que puede tomar en la simulación el coeficiente de reparto para un único usuario. Se puede poner esta restricción para evitar que un usuario tenga muy poca participación debido a tener poco consumo.")
 
     comunidadEnerg["max_participation"]=coefMax
     comunidadEnerg["min_participation"]=coefmin
