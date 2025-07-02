@@ -146,7 +146,7 @@ def texto_propio():
 
 def grafico_tabla_consumos(indicesUsr,mConsumos,mReparto,mExcedentes):
     dfCon = pd.DataFrame(mConsumos,index=indicesUsr,columns=["Consumos [kWh]"])
-    dfRep = pd.DataFrame(mReparto,index=indicesUsr,columns=["Reparto [kWh]"])
+    dfRep = pd.DataFrame(mReparto,index=indicesUsr,columns=["Generación Correspondiente [kWh]"])
     dfExc = pd.DataFrame(mExcedentes,index=indicesUsr,columns=["Excedentes [kWh]"])
     dfF = dfExc.join(dfRep)
     dfF = dfF.join(dfCon)
@@ -154,7 +154,7 @@ def grafico_tabla_consumos(indicesUsr,mConsumos,mReparto,mExcedentes):
     dfF2.index = [i for i in range(len(mConsumos))]
 
     st.markdown("")
-    st.markdown("*Gráfico 1. Valores promedios de consumo, reparto y excedentes*")
+    st.markdown("*Gráfico 1. Valores promedios de consumo, generación correspondiente y excedentes*")
     st.bar_chart(dfF2, horizontal = False, height = 500, width = 500, stack=False,color= ["#4343FF", "#28D06C", "#FF9943"], x_label="Usuarios", y_label="kWh")
 
     st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
@@ -170,7 +170,7 @@ def grafico_tabla_consumos(indicesUsr,mConsumos,mReparto,mExcedentes):
                     hide_index=False,
                     height = 43 * len(mConsumos),
                 )
-    st.markdown("*Tabla 1. Valores promedios de consumo, reparto y excedentes*")
+    st.markdown("*Tabla 1. Valores promedios de consumo, generación correspondiente y excedentes*")
 
 def texto_coef():
     st.markdown("### Coeficientes de reparto")

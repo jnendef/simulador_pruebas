@@ -109,7 +109,7 @@ def grafico_prod_total(mDatos,start_time,end_time,indices):
     matrizaux = mDatos[:,horasInicio:horasFin,2]
     reparto = np.sum(matrizaux,axis=0)
     
-    df = pd.DataFrame(reparto,columns=["Reparto"])
+    df = pd.DataFrame(reparto,columns=["Generación Correspondiente"])
     df.index = indices
     
     st.bar_chart(df, x_label="Horas", y_label= "kWh",color="#4343FF")
@@ -121,7 +121,7 @@ def dataframes_datos(start_time, end_time, eleccion, diccioUsr, mDatos):
 
     df0 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,0],columns=["Consumo"])
     df1 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,1],columns=["Coeficiente"])
-    df2 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,2],columns=["Reparto"])
+    df2 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,2],columns=["Generación Correspondiente"])
     df3 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,3],columns=["Excedentes"])
     df4 = df2.join(-1*df3)
     df4 = df4.join((-1*df0))
@@ -137,7 +137,7 @@ def graficado_energia(df0, df2, df3, df4, indices):
     st.bar_chart(df4, x_label="Horas", y_label= "kWh", color= ["#4343FF", "#28D06C", "#FF9943"])
 
     st.write("Consumo Total en el intervalo kWh: {}".format(str(df0.sum()["Consumo"])[:6]))
-    st.write("Reparto Total en el intervalo kWh: {}".format(str(df2.sum()["Reparto"])[:6]))
+    st.write("Generación Correspondiente Total en el intervalo kWh: {}".format(str(df2.sum()["Generación Correspondiente"])[:6]))
     st.write("Excedente Total en el intervalo kWh: {}".format(str(df3.sum()["Excedentes"])[:6]))
 
 def graficado_coef(df1,indices):

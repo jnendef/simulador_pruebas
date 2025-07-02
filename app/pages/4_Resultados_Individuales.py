@@ -63,7 +63,7 @@ try:
     st.markdown("### Gráfica de Producción total Comunidad")
     grafico_prod_total(mDatos,start_time,end_time,indices)
     
-    st.markdown("### Gráfica de Consumo, Reparto y Excedentes")
+    st.markdown("### Gráfica de Consumo, Generación Correspondiente y Excedentes")
     graficado_energia(df0, df2, df3, df4, indices)
     
     st.markdown("### Coeficientes de reparto")
