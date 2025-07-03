@@ -180,6 +180,42 @@ def texto_coef():
     st.markdown("El coeficiente mínimo seleccionado para la simulación es **"+str(st.session_state.datoscomunidad["min_participation"])+"%** que consiste en el valor mínimo que puede tomar en la simulación el coeficiente de reparto para un único usuario. Se puede poner esta restricción para evitar que un usuario tenga muy poca participación debido a tener poco consumo.")
     st.markdown("El porcentaje dedicado a pobreza energética es **"+str(st.session_state.datoscomunidad["energy_poverty"])+"%** que es el porcentaje de energía que se dedicará para los casos seleccionados.")
 
+def grafico_genera_tot(mgentot, mconsutot, indicesgen):
+    st.write("A continuación se muestra el gráfico de consumo total de los usuarios y generación fotovoltaica para las plantas generadoras incluidas en la comunidad.")
+
+    dfGen = pd.DataFrame(mgentot,index=indicesgen,columns=["Generacion[kWh]"])
+    dfCon = pd.DataFrame(mconsutot,index=indicesgen,columns=["Consumo[kWh]"])
+    dfCoef = dfCon.join(dfGen)
+
+    st.markdown("*Gráfico 0. Consumo y generación por meses de la planta de generación*")
+    st.bar_chart(dfCoef, horizontal = False, stack=False, height = 500, width = 500,color = [ "#4343FF", "#FF9943"], x_label="Meses", y_label="kWh",)
+
+    st.markdown("De forma tabulada, los valores de generación y el consumo mensual total de la comunidad serían los indicados a continuación:")
+
+    st.data_editor(
+                    dfCoef,
+                    column_config={
+                        "_index": st.column_config.Column(
+                            "Mes",
+                            width="large",
+                            required=True,
+                        ),
+                        "kWh": st.column_config.Column(
+                            "Consumo",
+                            width="medium",
+                            required=True,
+                        ),
+                        "kWh": st.column_config.Column(
+                            "Generación",
+                            width="medium",
+                            required=True,
+                        )
+                    },
+                    hide_index=False,
+                    height = 43 * len(indicesgen),
+                )
+    st.markdown("*Tabla 0. Valores de generación anuales por meses*")
+
 def grafico_tabla_coef(mCoef,indicesUsr):
     dfCoef = pd.DataFrame(mCoef,index=indicesUsr,columns=["%"])
         
@@ -224,12 +260,26 @@ def contenido_graficos():
     # mExcedentes = [mDatos[i,:,3].sum(0) for i in range(len(datosUsr))]
     mAutocons = [round(mDatos[i,:,2].sum(0) - mDatos[i,:,3].sum(0)) for i in range(len(datosUsr))]
 
+    mConsumo12T = np.sum(mDatos[:,:,0].copy(),axis = 0)
+    mReparto12T = np.sum(mDatos[:,:,2].copy(),axis = 0)
+    repartotot = np.zeros(12)
+    consutotot = np.zeros(12)
+    for i in range(1,13):
+        fechacero = dt.datetime(st.session_state.anyo,1,1,0,0)
+        horaini = 24 * (dt.datetime(st.session_state.anyo + (i)//13,((i)%13) + ((i)//13),1,0,0)-fechacero).days
+        horafin = 24 * (dt.datetime(st.session_state.anyo + (i+1)//13,((i+1)%13) + ((i+1)//13),1,0,0)-fechacero).days
+        repartotot[i-1] = np.round(np.sum(mReparto12T[horaini:horafin]))
+        consutotot[i-1] = np.round(np.sum(mConsumo12T[horaini:horafin]))
+
     # se prepara la lista de usuarios para el desplegable
     indicesUsr = preparacion_desplegable(redListaU)
     st.sidebar.write("")
 
     # Intentamos esta parte porque no sabemos si existen aun todas las variables
     try:
+        # Grafico de la generación anual Total
+        grafico_genera_tot(repartotot, consutotot, meses)
+
         # Texto personalizado para la comunidad de la simulacion
         texto_propio()
 
