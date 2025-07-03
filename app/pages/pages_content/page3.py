@@ -11,7 +11,7 @@ import pandas as pd
 
 from pages.coef_scripts.agente_Basico import Agente_MySql
 
-meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+meses = ["01-Ene", "02-Feb", "03-Mar", "04-Abr", "05-May", "06-Jun", "07-Jul", "08-Ago", "09-Sep", "10-Oct", "11-Nov", "12-Dic"]
 
 diccioTipo = {  "Apartamento_1adulto_calef_electrica" : 6,
                 "Apartamento_1adulto_calef_gas" : 7,
@@ -125,7 +125,7 @@ def preparacion_desplegable(redListaU):
             redLista2.append(int(i.split("-")[0]))
             posiRedLista.append(j)
     
-    indicesUsr = [str(i)+"-"+str(int(j.split("-")[1]))+" "+str(tipologiaSB[int(j.split("-")[0])]) for i,j in enumerate(redListaU)]
+    indicesUsr = [str(i)+"-"+str(tipologiaSB[int(j.split("-")[0])]) for i,j in enumerate(redListaU)]
 
     return indicesUsr
 
