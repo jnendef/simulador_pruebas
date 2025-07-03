@@ -63,9 +63,6 @@ try:
     df0, df1, df2, df3, df4 = dataframes_datos(start_time, end_time, eleccion, diccioUsr, mDatos)
     
     indices = obtencion_indices(start_time, end_time)
-
-    st.markdown("### Gráfica de Producción total Comunidad")
-    grafico_prod_total(mDatos,start_time,end_time,indices)
     
     st.markdown("### Gráfica de Consumo, Generación Correspondiente y Excedentes")
     graficado_energia(df0, df2, df3, df4, indices)
