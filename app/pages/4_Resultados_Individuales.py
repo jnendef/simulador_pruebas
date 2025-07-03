@@ -3,6 +3,7 @@
 
 import streamlit as st
 import datetime as dt
+import numpy as np
 
 import base64
 
@@ -10,8 +11,10 @@ import logging
 
 from datetime import datetime, timedelta
 
-from pages.pages_content.page4 import obtencion_datos_usr, datos_matriz, preparacion_lista, obtencion_indices, grafico_prod_total
-from pages.pages_content.page4 import dataframes_datos, graficado_energia, graficado_coef, coeficientes_intervalo
+from pages.pages_content.page4 import obtencion_datos_usr, datos_matriz, preparacion_lista, obtencion_indices, grafico_prod_total,matrices_meses
+from pages.pages_content.page4 import dataframes_datos, graficado_energia, graficado_coef, coeficientes_intervalo,grafico_genera_tot
+
+meses = ["01-Ene", "02-Feb", "03-Mar", "04-Abr", "05-May", "06-Jun", "07-Jul", "08-Ago", "09-Sep", "10-Oct", "11-Nov", "12-Dic"]
 
 tipologiaSB = {
     6:"Apartamento un adulto calefacción eléctrica",
@@ -48,9 +51,16 @@ try:
     redListaU, diccioUsr, mDatos = datos_matriz(datosUsr)
 
     eleccion = preparacion_lista(redListaU)
+
+    mconsutot, mgentot  = matrices_meses(mDatos,diccioUsr,eleccion)
+
+    grafico_genera_tot(mgentot, mconsutot, meses)
+    
     fecha_min = datetime(st.session_state.anyo, 1, 1, 0, 0)
     fecha_max = datetime(st.session_state.anyo+1, 1, 1, 0, 0) 
     
+    st.markdown("### Análisis para intervalo concreto de fechas")
+
     col1, col2 = st.columns(2)
     with col1:
         start_time = st.date_input("Fecha inicio",value = fecha_min, min_value = fecha_min, max_value = fecha_max)

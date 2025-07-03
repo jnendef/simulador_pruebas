@@ -37,6 +37,43 @@ tipologiaSB = {
     10:"(3889.858 kWh/año) Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
 }
 
+def grafico_genera_tot(mgentot, mconsutot, indicesgen):
+    st.write("A continuación se muestra el gráfico de consumo total de los usuarios y generación fotovoltaica para las plantas generadoras incluidas en la comunidad.")
+
+    dfGen = pd.DataFrame(mgentot,index=indicesgen,columns=["Generacion[kWh]"])
+    dfCon = pd.DataFrame(mconsutot,index=indicesgen,columns=["Consumo[kWh]"])
+    dfCoef = dfCon.join(dfGen)
+
+    st.markdown("*Gráfico 0. Consumo y generación por meses de la planta de generación*")
+    st.bar_chart(dfCoef, horizontal = False, stack=False, height = 500, width = 500,color = [ "#4343FF", "#FF9943"], x_label="Meses", y_label="kWh",)
+
+    st.markdown("De forma tabulada, los valores de generación y el consumo mensual total de la comunidad serían los indicados a continuación:")
+
+    st.data_editor(
+                    dfCoef,
+                    column_config={
+                        "_index": st.column_config.Column(
+                            "Mes",
+                            width="large",
+                            required=True,
+                        ),
+                        "kWh": st.column_config.Column(
+                            "Consumo",
+                            width="medium",
+                            required=True,
+                        ),
+                        "kWh": st.column_config.Column(
+                            "Generación",
+                            width="medium",
+                            required=True,
+                        )
+                    },
+                    hide_index=False,
+                    height = 43 * len(indicesgen),
+                )
+    st.markdown("*Tabla 0. Valores de consumo y generación por meses*")
+
+
 def obtencion_datos_usr():
     with Agente_MySql() as agente:
         sentenciaSQLusr = "SELECT * FROM leading_db.user WHERE id_energy_community = "+str(st.session_state.idComunidad)+";"
@@ -114,6 +151,18 @@ def grafico_prod_total(mDatos,start_time,end_time,indices):
     
     st.bar_chart(df, x_label="Horas", y_label= "kWh",color="#4343FF")
 
+def matrices_meses(mDatos,diccioUsr,eleccion):
+    mConsumo12T = mDatos[diccioUsr[eleccion],:,0].copy()
+    mReparto12T = mDatos[diccioUsr[eleccion],:,2].copy()
+    repartotot = np.zeros(12)
+    consutotot = np.zeros(12)
+    for i in range(1,13):
+        fechacero = dt.datetime(st.session_state.anyo,1,1,0,0)
+        horaini = 24 * (dt.datetime(st.session_state.anyo + (i)//13,((i)%13) + ((i)//13),1,0,0)-fechacero).days
+        horafin = 24 * (dt.datetime(st.session_state.anyo + (i+1)//13,((i+1)%13) + ((i+1)//13),1,0,0)-fechacero).days
+        repartotot[i-1] = np.round(np.sum(mReparto12T[horaini:horafin]))
+        consutotot[i-1] = np.round(np.sum(mConsumo12T[horaini:horafin]))
+    return consutotot, repartotot
 
 def dataframes_datos(start_time, end_time, eleccion, diccioUsr, mDatos):
     horasInicio = 24*(start_time-dt.datetime(st.session_state.anyo, 1, 1, 0, 0).date()).days

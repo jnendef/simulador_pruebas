@@ -214,7 +214,7 @@ def grafico_genera_tot(mgentot, mconsutot, indicesgen):
                     hide_index=False,
                     height = 43 * len(indicesgen),
                 )
-    st.markdown("*Tabla 0. Valores de generación anuales por meses*")
+    st.markdown("*Tabla 0. Valores de consumo y generación por meses*")
 
 def grafico_tabla_coef(mCoef,indicesUsr):
     dfCoef = pd.DataFrame(mCoef,index=indicesUsr,columns=["%"])
