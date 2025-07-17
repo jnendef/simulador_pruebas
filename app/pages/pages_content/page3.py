@@ -145,30 +145,35 @@ def texto_propio():
     st.markdown(" En el siguiente gráfico de barras se pueden apreciar los valores de los consumos, reparto autoconsumida, en valores promedio, para cada usuario de la comunidad, en kWh, para el año especificado en la simulación("+str(st.session_state.anyo)+").")
 
 def grafico_tabla_consumos(indicesUsr,mConsumos,mReparto,mExcedentes):
-    dfCon = pd.DataFrame(mConsumos,index=indicesUsr,columns=["Consumos [kWh]"])
-    dfRep = pd.DataFrame(mReparto,index=indicesUsr,columns=["Generación Correspondiente [kWh]"])
-    dfExc = pd.DataFrame(mExcedentes,index=indicesUsr,columns=["Autoconsumida [kWh]"])
-    dfF = dfExc.join(dfRep)
-    dfF = dfF.join(dfCon)
+    dfCon = pd.DataFrame(mConsumos,index=indicesUsr,columns=["2_Consumos"])
+    dfRep = pd.DataFrame(mReparto,index=indicesUsr,columns=["1_Generación Correspondiente"])
+    dfExc = pd.DataFrame(mExcedentes,index=indicesUsr,columns=["3_Autoconsumida"])
+    dfF = dfRep.join(dfCon)
+    dfF = dfF.join(dfExc)
     dfF2 = dfF.copy()
     dfF2.index = [i for i in range(len(mConsumos))]
 
     st.markdown("")
-    st.markdown("*Gráfico 1. Valores promedios de consumo, generación correspondiente y autoconsumida*")
-    st.bar_chart(dfF2, horizontal = False, height = 500, width = 500, stack=False,color= [ "#28D06C", "#4343FF", "#FF9943"], x_label="Usuarios", y_label="kWh")
+    st.markdown("*Gráfico 1. Valores promedios de consumida, generación correspondiente y autoconsumida*")
+    st.bar_chart(dfF2, horizontal = False, height = 500, width = 500, stack=False,color= [  "#FF9943","#4343FF","#28D06C"], x_label="Usuarios", y_label="kWh")
 
-    st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
-    st.data_editor(
+    indice = st.column_config.TextColumn(label="Usuarios",width="medium",required=True)
+    consumos = st.column_config.NumberColumn(label="Consumos",width="small", format="%d kWh",required=True)
+    autoconsumida = st.column_config.NumberColumn(label="Autoconsumida",width="small", format="%d kWh",required=True)
+    generacion = st.column_config.NumberColumn(label="Generación",width="small", format="%d kWh",required=True)
+
+    st.markdown("De forma tabulada, los valores totales anuales serían los indicados a continuación:")
+    st.data_editor( 
                     dfF,
-                    column_config={
-                        "_index": st.column_config.Column(
-                            "Usuarios",
-                            width="medium",
-                            required=True,
-                        )
-                    },
-                    hide_index=False,
                     height = 43 * len(mConsumos),
+                    width= 800,
+                    hide_index=False,
+                    column_config={
+                        "_index": indice,
+                        "1_Generación Correspondiente":generacion,
+                        "2_Consumos":consumos,
+                        "3_Autoconsumida":autoconsumida,
+                    },
                 )
     st.markdown("*Tabla 1. Valores promedios de consumo, generación correspondiente y autoconsumida*")
 
@@ -183,9 +188,13 @@ def texto_coef():
 def grafico_genera_tot(mgentot, mconsutot, indicesgen):
     st.write("A continuación se muestra el gráfico de consumo total de los usuarios y generación fotovoltaica para las plantas generadoras incluidas en la comunidad.")
 
-    dfGen = pd.DataFrame(mgentot,index=indicesgen,columns=["Generacion[kWh]"])
-    dfCon = pd.DataFrame(mconsutot,index=indicesgen,columns=["Consumo[kWh]"])
+    dfGen = pd.DataFrame(mgentot,index=indicesgen,columns=["Generacion"])
+    dfCon = pd.DataFrame(mconsutot,index=indicesgen,columns=["Consumo"])
     dfCoef = dfCon.join(dfGen)
+
+    indice = st.column_config.TextColumn(label="Mes",width="small",required=True)
+    consumo = st.column_config.NumberColumn(label="Consumo",width="medium", format="%d kWh",required=True)
+    generacion = st.column_config.NumberColumn(label="Generación",width="medium", format="%d kWh",required=True)
 
     st.markdown("*Gráfico 0. Consumo y generación por meses de la planta de generación*")
     st.bar_chart(dfCoef, horizontal = False, stack=False, height = 500, width = 500,color = [ "#4343FF", "#FF9943"], x_label="Meses", y_label="kWh",)
@@ -195,21 +204,9 @@ def grafico_genera_tot(mgentot, mconsutot, indicesgen):
     st.data_editor(
                     dfCoef,
                     column_config={
-                        "_index": st.column_config.Column(
-                            "Mes",
-                            width="large",
-                            required=True,
-                        ),
-                        "kWh": st.column_config.Column(
-                            "Consumo",
-                            width="medium",
-                            required=True,
-                        ),
-                        "kWh": st.column_config.Column(
-                            "Generación",
-                            width="medium",
-                            required=True,
-                        )
+                        "_index": indice,
+                        "Consumo": consumo,
+                        "Generacion": generacion,
                     },
                     hide_index=False,
                     height = 43 * len(indicesgen),
@@ -226,19 +223,14 @@ def grafico_tabla_coef(mCoef,indicesUsr):
 
     st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
 
+    indice = st.column_config.TextColumn(label="Usuarios",width="medium",required=True)
+    porcentaje = st.column_config.NumberColumn(label="Coeficiente [%]",width="medium", format="%.4f",required=True)
+
     st.data_editor(
                     dfCoef,
                     column_config={
-                        "_index": st.column_config.Column(
-                            "Usuarios",
-                            width="large",
-                            required=True,
-                        ),
-                        "%": st.column_config.Column(
-                            "Porcentaje",
-                            width="medium",
-                            required=True,
-                        )
+                        "_index":indice,
+                        "%": porcentaje,
                     },
                     hide_index=False,
                     height = 43 * len(indicesUsr),
@@ -255,10 +247,10 @@ def contenido_graficos():
     
     # mDatos[nhoras,nusuarios,(consumos,coeficientes,reparto energetico,excedentes)]
     mConsumos = [round(mDatos[i,:,0].sum(0)) for i in range(len(datosUsr))]
-    mCoef = [round(mDatos[i,:,1].mean(0),4) for i in range(len(datosUsr))]
-    mReparto = [round(mDatos[i,:,2].sum(0)) for i in range(len(datosUsr))]
+    mCoef = [mDatos[i,:,1].mean(0) for i in range(len(datosUsr))]
+    mReparto = [mDatos[i,:,2].sum(0) for i in range(len(datosUsr))]
     # mExcedentes = [mDatos[i,:,3].sum(0) for i in range(len(datosUsr))]
-    mAutocons = [round(mDatos[i,:,2].sum(0) - mDatos[i,:,3].sum(0)) for i in range(len(datosUsr))]
+    mAutocons = [(mDatos[i,:,2].sum(0) - mDatos[i,:,3].sum(0)) for i in range(len(datosUsr))]
 
     mConsumo12T = np.sum(mDatos[:,:,0].copy(),axis = 0)
     mReparto12T = np.sum(mDatos[:,:,2].copy(),axis = 0)
@@ -268,8 +260,8 @@ def contenido_graficos():
         fechacero = dt.datetime(st.session_state.anyo,1,1,0,0)
         horaini = 24 * (dt.datetime(st.session_state.anyo + (i)//13,((i)%13) + ((i)//13),1,0,0)-fechacero).days
         horafin = 24 * (dt.datetime(st.session_state.anyo + (i+1)//13,((i+1)%13) + ((i+1)//13),1,0,0)-fechacero).days
-        repartotot[i-1] = np.round(np.sum(mReparto12T[horaini:horafin]))
-        consutotot[i-1] = np.round(np.sum(mConsumo12T[horaini:horafin]))
+        repartotot[i-1] = np.sum(mReparto12T[horaini:horafin])
+        consutotot[i-1] = np.sum(mConsumo12T[horaini:horafin])
 
     # se prepara la lista de usuarios para el desplegable
     indicesUsr = preparacion_desplegable(redListaU)

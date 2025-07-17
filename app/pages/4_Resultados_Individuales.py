@@ -11,6 +11,8 @@ import logging
 
 from datetime import datetime, timedelta
 
+from pages.pages_content.page3 import desenlace
+
 from pages.pages_content.page4 import obtencion_datos_usr, datos_matriz, preparacion_lista, obtencion_indices, grafico_prod_total,matrices_meses
 from pages.pages_content.page4 import dataframes_datos, graficado_energia, graficado_coef, coeficientes_intervalo,grafico_genera_tot
 
@@ -52,7 +54,10 @@ try:
 
     eleccion = preparacion_lista(redListaU)
 
-    mconsutot, mgentot  = matrices_meses(mDatos,diccioUsr,eleccion)
+    consu = mDatos[diccioUsr[eleccion],:,0].copy()
+    mconsutot  = matrices_meses(consu)
+    gener = mDatos[diccioUsr[eleccion],:,2].copy()
+    mgentot  = matrices_meses(gener)
 
     grafico_genera_tot(mgentot, mconsutot, meses)
     
@@ -61,23 +66,27 @@ try:
     
     st.markdown("### Análisis para intervalo concreto de fechas")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        start_time = st.date_input("Fecha inicio",value = fecha_min, min_value = fecha_min, max_value = fecha_max)
-    with col2:
-        deltat = fecha_max-datetime(start_time.year, start_time.month, start_time.day, 0, 0)
-        incremento = st.number_input("Intervalo días", value = 1, min_value = 1, max_value = deltat.days, step=1, format="%d")
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     start_time = st.date_input("Fecha inicio",value = fecha_min, min_value = fecha_min, max_value = fecha_max)
+    # with col2:
+    #     deltat = fecha_max-datetime(start_time.year, start_time.month, start_time.day, 0, 0)
+    #     incremento = st.number_input("Intervalo días", value = 1, min_value = 1, max_value = deltat.days, step=1, format="%d")
 
-    end_time = start_time + timedelta(incremento)
+    end_time = fecha_min + timedelta(360)
 
-    df0, df1, df2, df3, df4 = dataframes_datos(start_time, end_time, eleccion, diccioUsr, mDatos)
+    df0, df1, df2, df3, df4 = dataframes_datos(fecha_min, end_time, eleccion, diccioUsr, mDatos)
     
-    indices = obtencion_indices(start_time, end_time)
+    # indices = obtencion_indices(fecha_min, end_time)
+    indices = meses.copy()
     
-    st.markdown("### Gráfica de Consumo, Generación Correspondiente y Excedentes")
+    st.markdown("### Gráfica de Generación Correspondiente, Excedentes y Autoconsumida")
+    st.markdown("La gráfica a continuación contiene la generación que le corresponde al usuario de la comunidad seleccionado y cómo se distribuye su uso en Excedentes y Autoconsumida. Siendo los excedentes la energía vertida a red (que no ha consumido la comunidad) y la Autoconsumida la que ha podido aprovechar la comunidad. El resultado de la suma de Excedentes y Autoconsumida es la Generación Correspondiente.")
     graficado_energia(df0, df2, df3, df4, indices)
     
     st.markdown("### Coeficientes de reparto")
+    st.markdown("Los coeficientes de reparto son los factores por los que se multiplica la producción para obtener el reparto de la energía producida. La elección del valor de estos coeficientes es decisión de la comunidad energética y se debe aceptar por parte de los miembros de ésta.")
+    st.markdown("En este análisis se muestran los coeficientes promedios mensuales, que no tienen por qué coincidir con el coeficiente promedio anual por horas, que es el calculado en la pestaña de resultados generales.")
     graficado_coef(df1,indices)
 
     # st.markdown("## Coeficientes del intervalo")
@@ -85,17 +94,7 @@ try:
     # if cups != "" and len(cups)==22:
     #     coeficientes_intervalo(start_time, end_time,indices,df1, cups)
 
-    col1,col2,col3 = st.columns(3)
-
-    with col3:
-        st.markdown(
-            """<a href="https://endef.com/">
-            <img src="data:;base64,{}" width="200">
-            </a>""".format(
-                base64.b64encode(open("path1.png", "rb").read()).decode()
-            ),
-            unsafe_allow_html=True,
-        )
+    desenlace()
 
 except Exception as e:
     logging.debug("Problema para mostrar info usuarios:", exc_info=True)

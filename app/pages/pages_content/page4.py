@@ -38,35 +38,26 @@ tipologiaSB = {
 }
 
 def grafico_genera_tot(mgentot, mconsutot, indicesgen):
-    st.write("A continuación se muestra el gráfico de consumo total de los usuarios y generación fotovoltaica para las plantas generadoras incluidas en la comunidad.")
+    st.write("A continuación se muestra el gráfico para este usuario que incluye el consumo y generación fotovoltaica correspondiente para las plantas generadoras incluidas en la comunidad.")
 
-    dfGen = pd.DataFrame(mgentot,index=indicesgen,columns=["Generacion[kWh]"])
-    dfCon = pd.DataFrame(mconsutot,index=indicesgen,columns=["Consumo[kWh]"])
+    dfGen = pd.DataFrame(mgentot,index=indicesgen,columns=["2_Generacion Correspondiente"])
+    dfCon = pd.DataFrame(mconsutot,index=indicesgen,columns=["1_Consumo Usuario"])
     dfCoef = dfCon.join(dfGen)
 
-    st.markdown("*Gráfico 0. Consumo y generación por meses de la planta de generación*")
+    st.markdown("*Gráfico 0. Consumo y generación correspondiente por meses del usuario*")
     st.bar_chart(dfCoef, horizontal = False, stack=False, height = 500, width = 500,color = [ "#4343FF", "#FF9943"], x_label="Meses", y_label="kWh",)
 
-    st.markdown("De forma tabulada, los valores de generación y el consumo mensual total de la comunidad serían los indicados a continuación:")
+    st.markdown("De forma tabulada, los valores de generación correspondiente y el consumo mensual total del usuario serían los indicados a continuación:")
+    indice = st.column_config.TextColumn(label="Mes",width="medium",required=True)
+    consumos = st.column_config.NumberColumn(label="Consumo",width="medium", format="%d kWh",required=True)
+    generacion = st.column_config.NumberColumn(label="Generación",width="medium", format="%d kWh",required=True) 
 
     st.data_editor(
                     dfCoef,
                     column_config={
-                        "_index": st.column_config.Column(
-                            "Mes",
-                            width="large",
-                            required=True,
-                        ),
-                        "kWh": st.column_config.Column(
-                            "Consumo",
-                            width="medium",
-                            required=True,
-                        ),
-                        "kWh": st.column_config.Column(
-                            "Generación",
-                            width="medium",
-                            required=True,
-                        )
+                        "_index": indice,
+                        "Consumo": consumos,
+                        "Generacion": generacion
                     },
                     hide_index=False,
                     height = 43 * len(indicesgen),
@@ -151,29 +142,51 @@ def grafico_prod_total(mDatos,start_time,end_time,indices):
     
     st.bar_chart(df, x_label="Horas", y_label= "kWh",color="#4343FF")
 
-def matrices_meses(mDatos,diccioUsr,eleccion):
-    mConsumo12T = mDatos[diccioUsr[eleccion],:,0].copy()
-    mReparto12T = mDatos[diccioUsr[eleccion],:,2].copy()
-    repartotot = np.zeros(12)
-    consutotot = np.zeros(12)
-    for i in range(1,13):
-        fechacero = dt.datetime(st.session_state.anyo,1,1,0,0)
-        horaini = 24 * (dt.datetime(st.session_state.anyo + (i)//13,((i)%13) + ((i)//13),1,0,0)-fechacero).days
-        horafin = 24 * (dt.datetime(st.session_state.anyo + (i+1)//13,((i+1)%13) + ((i+1)//13),1,0,0)-fechacero).days
-        repartotot[i-1] = np.round(np.sum(mReparto12T[horaini:horafin]))
-        consutotot[i-1] = np.round(np.sum(mConsumo12T[horaini:horafin]))
-    return consutotot, repartotot
+def matrices_meses(mDatos):
+    mConsumo12T = mDatos.copy()
+    result = np.zeros(12)
+    fechacero = dt.datetime(st.session_state.anyo,1,1,0,0)
+    for i in range(1,12):
+        horaini = 24 * ((dt.datetime(st.session_state.anyo,i,1,0,0)-fechacero).days)
+        horafin = 24 * ((dt.datetime(st.session_state.anyo,i+1,1,0,0)-fechacero).days)
+        result[i-1] = np.sum(mConsumo12T[horaini:horafin])
+
+    horaini = 24 * ((dt.datetime(st.session_state.anyo,12,1,0,0)-fechacero).days)
+    horafin = 24 * ((dt.datetime(st.session_state.anyo+1,1,1,0,0)-fechacero).days)
+    result[11] = np.sum(mConsumo12T[horaini:horafin])
+
+    return result
+
+def matrices_meses_media(mDatos):
+    mConsumo12T = mDatos.copy()
+    result = np.zeros(12)
+    fechacero = dt.datetime(st.session_state.anyo,1,1,0,0)
+    for i in range(1,12):
+        horaini = 24 * ((dt.datetime(st.session_state.anyo,i,1,0,0)-fechacero).days)
+        horafin = 24 * ((dt.datetime(st.session_state.anyo,i+1,1,0,0)-fechacero).days)
+        result[i-1] = np.mean(mConsumo12T[horaini:horafin])
+
+    horaini = 24 * ((dt.datetime(st.session_state.anyo,12,1,0,0)-fechacero).days)
+    horafin = 24 * ((dt.datetime(st.session_state.anyo+1,1,1,0,0)-fechacero).days)
+    result[11] = np.mean(mConsumo12T[horaini:horafin])
+
+    return result
 
 def dataframes_datos(start_time, end_time, eleccion, diccioUsr, mDatos):
-    horasInicio = 24*(start_time-dt.datetime(st.session_state.anyo, 1, 1, 0, 0).date()).days
-    horasFin = 24*(end_time-dt.datetime(st.session_state.anyo, 1, 1, 0, 0).date()).days
-
-    df0 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,0],columns=["Consumo"])
-    df1 = pd.DataFrame(np.round(mDatos[diccioUsr[eleccion],horasInicio:horasFin,1],4),columns=["Coeficiente"])
-    df2 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,2],columns=["Generación Correspondiente"])
-    df3 = pd.DataFrame(mDatos[diccioUsr[eleccion],horasInicio:horasFin,3],columns=["Excedentes"])
+    # horasInicio = 0
+    # horasFin = 24*((end_time-start_time).days)
+    mdf0 = matrices_meses(mDatos[diccioUsr[eleccion],:,0])
+    mdf1 = matrices_meses_media(mDatos[diccioUsr[eleccion],:,1])
+    mdf2 = matrices_meses(mDatos[diccioUsr[eleccion],:,2])
+    mdf3 = matrices_meses(mDatos[diccioUsr[eleccion],:,3])
+    df0 = pd.DataFrame(mdf0,columns=["Consumo"])
+    df1 = pd.DataFrame(mdf1,columns=["Coeficiente"])
+    df2 = pd.DataFrame(mdf2,columns=["Generación Correspondiente"])
+    df3 = pd.DataFrame(mdf2 - mdf3,columns=["Autoconsumida"])
+    df3_2 = pd.DataFrame(mdf3,columns=["Excedentes"])
+    
     df4 = df2.join(-1*df3)
-    df4 = df4.join((-1*df0))
+    df4 = df4.join(-1*df3_2)
 
     return df0, df1, df2, df3, df4
 
@@ -183,16 +196,22 @@ def graficado_energia(df0, df2, df3, df4, indices):
     df3.index = indices
     df4.index = indices
 
-    st.bar_chart(df4, x_label="Horas", y_label= "kWh", color= ["#4343FF", "#28D06C", "#FF9943"])
+    st.bar_chart(df4, x_label="Horas", y_label= "kWh", color= [ "#28D06C","#4343FF", "#FF9943"])
 
-    st.write("Consumo Total en el intervalo kWh: {}".format(str(df0.sum()["Consumo"])[:6]))
-    st.write("Generación Correspondiente Total en el intervalo kWh: {}".format(str(df2.sum()["Generación Correspondiente"])[:6]))
-    st.write("Excedente Total en el intervalo kWh: {}".format(str(df3.sum()["Excedentes"])[:6]))
+    consumo = df0.sum()["Consumo"]
+    generacion = df2.sum()["Generación Correspondiente"]
+    autoconsumo = df3.sum()["Autoconsumida"]
+
+
+    st.write(f"Consumo en el intervalo: {consumo:.0f} kWh")
+    st.write(f"Generación Correspondiente en el intervalo: {generacion:.0f} kWh")
+    st.write(f"Autoconsumida en el intervalo: {autoconsumo:.0f} kWh")
 
 def graficado_coef(df1,indices):
     df1.index = indices
-    st.line_chart(df1, x_label = "Horas", y_label = "%", color="#4343FF")
-    st.write("Coeficiente Promedio en el intervalo en Porcentaje: {}".format(str(df1.mean()["Coeficiente"])[:6]))
+    st.bar_chart(df1, x_label = "Meses", y_label = "%", color="#4343FF")
+    valor = df1.mean()["Coeficiente"]/100.0
+    st.write(f"Coeficiente Promedio en el intervalo en Porcentaje: {valor:2.4%}")
 
 def coeficientes_intervalo(start_time, end_time,indices,df1,cups):
     coeficientes = []
