@@ -94,9 +94,11 @@ if 'golocalizador' not in st.session_state:
     st.session_state.golocalizador = Nominatim(user_agent="aplication")
 if 'localizador' not in st.session_state:
     st.session_state.localizador = None
-    
+
+from zoneinfo import ZoneInfo
+espana = ZoneInfo("Europe/Madrid")
 st.markdown("# SOFTWARE DE SIMULACIÓN DE COMUNIDADES ENERGÉTICAS")
-st.write(dt.datetime.today().__format__('%d %b %Y, %I:%M%p'))
+st.write(dt.datetime.today().astimezone(espana).__format__('%d %b %Y, %I:%M%p'))
 
 ce = False
 

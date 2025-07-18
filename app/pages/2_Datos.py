@@ -18,8 +18,11 @@ try:
     st.title("Datos comunidad de : "+str(st.session_state.comunidades[-1][0]) + " [" + str(st.session_state.comunidades[-1][1]) + "]")
 except:
     st.title("Ponga nombre y localidad de la Comunidad.")
-             
-st.write(dt.datetime.today().__format__('%d %b %Y, %I:%M%p'))
+
+
+from zoneinfo import ZoneInfo
+espana = ZoneInfo("Europe/Madrid")
+st.write(dt.datetime.today().astimezone(espana).__format__('%d %b %Y, %I:%M%p'))
 st.info("Se deben rellenar todos los campos requeridos antes de la subida de datos y la simulación. Prestar atención a los avisos en cada pestaña")
 
 st.sidebar.markdown(
