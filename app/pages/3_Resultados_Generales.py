@@ -8,8 +8,6 @@ import base64
 
 from pages.pages_content.page3 import introduccion, desarrollo, contenido_graficos, desenlace
 
-
-
 st.sidebar.markdown(
     """<a href="https://endef.com/">
     <img src="data:;base64,{}" width="200">
@@ -42,6 +40,6 @@ try:
     else:
         st.markdown("# Realice la simulación para obtener los resultados para su comunidad")
 
-    desenlace()
+    desenlace(meses)
 except:
     st.markdown("# Realice la simulación para obtener los resultados para su comunidad")

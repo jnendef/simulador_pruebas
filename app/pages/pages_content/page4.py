@@ -56,8 +56,8 @@ def grafico_genera_tot(mgentot, mconsutot, indicesgen):
                     dfCoef,
                     column_config={
                         "_index": indice,
-                        "Consumo": consumos,
-                        "Generacion": generacion
+                        "1_Consumo Usuario": consumos,
+                        "2_Generacion Correspondiente": generacion
                     },
                     hide_index=False,
                     height = 43 * len(indicesgen),
@@ -195,7 +195,8 @@ def graficado_energia(df0, df2, df3, df4, indices):
     df2.index = indices
     df3.index = indices
     df4.index = indices
-
+    
+    st.markdown("*Gráfico 1. Gráfica de Generación Correspondiente, Excedentes y Autoconsumida*")
     st.bar_chart(df4, x_label="Horas", y_label= "kWh", color= [ "#28D06C","#4343FF", "#FF9943"])
 
     consumo = df0.sum()["Consumo"]
@@ -209,6 +210,7 @@ def graficado_energia(df0, df2, df3, df4, indices):
 
 def graficado_coef(df1,indices):
     df1.index = indices
+    st.markdown("*Gráfico 2. Coeficientes de reparto promediados por mes para este usuario*")
     st.bar_chart(df1, x_label = "Meses", y_label = "%", color="#4343FF")
     valor = df1.mean()["Coeficiente"]/100.0
     st.write(f"Coeficiente Promedio en el intervalo en Porcentaje: {valor:2.4%}")

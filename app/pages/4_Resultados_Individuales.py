@@ -97,7 +97,7 @@ try:
     # if cups != "" and len(cups)==22:
     #     coeficientes_intervalo(start_time, end_time,indices,df1, cups)
 
-    desenlace()
+    desenlace(meses2)
 
 except Exception as e:
     logging.debug("Problema para mostrar info usuarios:", exc_info=True)
