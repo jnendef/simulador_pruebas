@@ -1,12 +1,12 @@
 import streamlit as st
-
+import time
 # import os
 import logging
 
 from pages.coef_scripts.agente_Basico import Agente_MySql
+from pages.scripts.utils import get_rate_limiter
 
 from pages.coef_scripts.Paso0_Comprobacion import comprobacionDb
-
 from pages.coef_scripts.Paso1_EstimProd import Paso1
 from pages.coef_scripts.Paso2_UserByProfile import Paso2
 from pages.coef_scripts.Paso3_Baterias import Paso3
@@ -57,6 +57,14 @@ def calcula2(start, date_year):
                 okey,datos,datosUs,datosCe,datosGen,datosBat =comprobacionDb(agenteEjecucionMySql,i)
                 if okey:
                     try:
+                        rate_limiter = get_rate_limiter()
+                        # Respetar 1 req/s
+                        ahora = time.time()
+                        diff = ahora - rate_limiter["last_request"]
+                        if diff < 1.0:
+                            time.sleep(1.0 - diff)
+                        rate_limiter["last_request"] = time.time()
+                        
                         proceso1, VectorDatosProduccion, idComunidad = Paso1(agenteEjecucionMySql,i,anyoDatosGuardarComunidad,bisiesto)
                         status.progress(25)
                     except Exception as e:
