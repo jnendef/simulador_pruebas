@@ -10,7 +10,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 from pages.pages_content.page2 import creacion_CE
-from geopy.geocoders import Nominatim 
+from pages.scripts.utils import geocode
 
 import base64
 # from streamlit import config
@@ -89,9 +89,14 @@ if 'usuariosCE' not in st.session_state:
 if 'informe' not in st.session_state:
     st.session_state.informe = {}
 
+# Usamos session_state para recordar la última búsqueda del usuario
+if "ultima_direccion" not in st.session_state:
+    st.session_state.ultima_direccion = "Zaragoza"
+
 #Creacion de un localizador de coordenadas
-if 'golocalizador' not in st.session_state:
-    st.session_state.golocalizador = Nominatim(user_agent="aplication")
+if 'geolocalizador' not in st.session_state:
+    st.session_state.geolocalizador = geocode(st.session_state.ultima_direccion)
+
 if 'localizador' not in st.session_state:
     st.session_state.localizador = None
 
@@ -102,9 +107,7 @@ st.write(dt.datetime.today().astimezone(espana).__format__('%d %b %Y, %I:%M%p'))
 
 ce = False
 
-geolocator = st.session_state.golocalizador
-
-st.session_state.comunidad, st.session_state.comunidadDF, ce = creacion_CE(geolocator,ce)
+st.session_state.comunidad, st.session_state.comunidadDF, ce = creacion_CE(ce)
 
 st.sidebar.markdown(
     """<a href="https://endef.com/">

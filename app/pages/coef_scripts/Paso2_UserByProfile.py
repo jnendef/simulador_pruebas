@@ -298,6 +298,7 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
         # Recorremos cada uno de los perfiles almacenados
         for entradaPerfil in registroPerfile:
             id_consumer_profile = entradaPerfil[2]
+            consumo_perfil = []
 
             # Obtenemos la descripción del id_consumer_profile
             sentenciaObtenerDescripcionPerfil = "SELECT description FROM leading_db.consumer_profile WHERE id_consumer_profile = " + str(id_consumer_profile)
@@ -349,6 +350,7 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
                         #Componemos el vector de datos a insertar
                         TuplaVectorDatosConsumo = [str(idNewUser),str(dateConsumo),valorConsumo,0,0,0]
                         VectorDatosConsumo.append(TuplaVectorDatosConsumo)
+                        consumo_perfil.append(TuplaVectorDatosConsumo)
 
                     elif not salto:
                         valorConsumo = float(datoPerfilUsario[4])
@@ -360,6 +362,7 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
                         #Componemos el vector de datos a insertar
                         TuplaVectorDatosConsumo = [str(idNewUser),str(dateConsumo),valorConsumo,0,0,0]
                         VectorDatosConsumo.append(TuplaVectorDatosConsumo)
+                        consumo_perfil.append(TuplaVectorDatosConsumo)
 
                     # Si el año es bisiesto, duplicamos los datos del día 28/02 en el día 29/02
 
@@ -371,11 +374,11 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
                         #Componemos el vector de datos a insertar
                         TuplaVectorDatosConsumo = [str(idNewUser),str(dateConsumo),valorConsumo,0,0,0]
                         VectorDatosConsumo.append(TuplaVectorDatosConsumo)
-
-        # Ejecutamos el insert en base de datos para todos los datos del nuevo usuario    que están almacenados en el vector de datos a insertar
-        sentenciaInsertNuevoDatoPerfil = "INSERT INTO leading_db.user_data (id_user, timestamp, consumption, partition_coefficient, partition_energy, partition_surplus_energy) VALUES(%s, %s, %s, %s, %s, %s)"
-                
-        agente.ejecutarMuchos(sentenciaInsertNuevoDatoPerfil, VectorDatosConsumo)
+                        consumo_perfil.append(TuplaVectorDatosConsumo)
+            # Ejecutamos el insert en base de datos para todos los datos del nuevo usuario    que están almacenados en el vector de datos a insertar
+            sentenciaInsertNuevoDatoPerfil = "INSERT INTO leading_db.user_data (id_user, timestamp, consumption, partition_coefficient, partition_energy, partition_surplus_energy) VALUES(%s, %s, %s, %s, %s, %s)"
+                    
+            agente.ejecutarMuchos(sentenciaInsertNuevoDatoPerfil, consumo_perfil)
 
         # Indicamos que la ejecución ha acabado correctamente
         final1000(agente,fcStart,idComunidad)

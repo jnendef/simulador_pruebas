@@ -2,6 +2,7 @@
 ### josemanuel.naveiro@endef.com
 
 import streamlit as st
+from pages.scripts.utils import geocode
 from pages.scripts.envios import envioDatos
 from pages.scripts.funcionesgrles import comprobarStrings, camposDataframe, borrar
 
@@ -10,7 +11,7 @@ import numpy as np
 import pandas as pd
 import logging
 
-def creacion_CE(geolocator,ce):
+def creacion_CE(ce):
     st.info("Nota aclaratoria: Obligatorio cumplimentar Nombre de la comunidad y Ubicación. No emplear signos de puntuación")
     st.header("Comunidad")
     st.markdown("### Datos Generales")
@@ -46,14 +47,17 @@ def creacion_CE(geolocator,ce):
                 comunidadEnerg["id_administrator"] = 1
                 ce = True
         
-            st.info("Datos cumplimentados")
-            st.session_state.nComunidad = nombreCE
-            st.session_state.saltoSimu = False
-            st.success('Ya puedes pasar a la página Datos y cumplimentar los datos de la instalación', icon="✅")
             try:
-                st.session_state.localizador = geolocator.geocode(ubicacion)
+                st.session_state.ultima_direccion = ubicacion
+                st.session_state.localizador = geocode(ubicacion)
             except:
-                logging.debug("No se ha podido incluir la localización en la creación de la CE.")
+                logging.debug("No se ha podido incluir la localizacion en la creacion de la CE.")
+            else:
+                st.info("Datos cumplimentados")
+                st.session_state.nComunidad = nombreCE
+                st.session_state.saltoSimu = False
+                st.success('Ya puedes pasar a la página Datos y cumplimentar los datos de la instalación', icon="✅")
+                
         except Exception as e:
             logging.error("No se ha podido incluir la comunidad: ", exc_info=True)    
     
