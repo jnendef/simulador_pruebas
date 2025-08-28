@@ -67,7 +67,7 @@ try:
     fecha_min = datetime(st.session_state.anyo, 1, 1, 0, 0)
     fecha_max = datetime(st.session_state.anyo+1, 1, 1, 0, 0) 
     
-    st.markdown("### Análisis para intervalo concreto de fechas")
+    # st.markdown("### Análisis para intervalo concreto de fechas")
 
     # col1, col2 = st.columns(2)
     # with col1:

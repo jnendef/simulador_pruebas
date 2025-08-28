@@ -52,7 +52,7 @@ def creacion_CE(ce):
                 st.session_state.localizador = geocode(ubicacion)
             except:
                 logging.debug("No se ha podido incluir la localizacion en la creacion de la CE.")
-            else:
+            finally:
                 st.info("Datos cumplimentados")
                 st.session_state.nComunidad = nombreCE
                 st.session_state.saltoSimu = False
@@ -73,9 +73,12 @@ def instalacion_fv(ce,fv):
     st.header("Generadores FV")
     st.markdown("### Formulario de incorporación generador FV")
     descFV = st.text_input("Descripción de los generadores FV", value = "FV1",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de una planta fotovoltaica. No usar signos de puntuación.", disabled= not ce)
- 
-    latiFV = st.number_input("Latitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = location.latitude, max_value=90.0, min_value=-90.0,format="%2.6f")
-    longFV = st.number_input("Longitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = location.longitude, max_value=180.0, min_value=-180.0, format="%2.6f")
+    if location != None:
+        latiFV = st.number_input("Latitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = location.latitude, max_value=90.0, min_value=-90.0,format="%2.6f")
+        longFV = st.number_input("Longitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = location.longitude, max_value=180.0, min_value=-180.0, format="%2.6f")
+    else:
+        latiFV = st.number_input("Latitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = 41.656761, max_value=90.0, min_value=-90.0,format="%2.6f")
+        longFV = st.number_input("Longitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = -0.8783888, max_value=180.0, min_value=-180.0, format="%2.6f")
     
     df = pd.DataFrame(
         {
@@ -127,16 +130,20 @@ def instalacion_fv(ce,fv):
         borrar("fotovolt",aux)
         st.rerun()
     
-    return dfFV, numeroFV, fv
+    return dfFV, numeroFV, fv, latiFV,longFV
 
-def instalacion_eo(ce,eo):
-    location = st.session_state.localizador
+def instalacion_eo(ce,eo,latiFV,longFV):
     st.info("Nota aclaratoria: Si hay FV y no hay eólica, puedes pasar a la siguiente pestaña")
     st.header("Generadores eólicos")
     st.markdown("### Formulario de incorporación generador Eólico")
     descEo = st.text_input("Descripción de los generadores eólicos", value = "EO1",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de un generador eólico. No usar signos de puntuación.", disabled= not ce)
-    latiEo = st.number_input("Latitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = location.latitude,max_value=90.0,min_value=-90.0,format="%2.6f")
-    longEo = st.number_input("Longitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = location.longitude,max_value=180.0,min_value=-180.0,format="%2.6f")
+    if  latiFV != None and longFV != None:
+        latiEo = st.number_input("Latitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = latiFV,max_value=90.0,min_value=-90.0,format="%2.6f")
+        longEo = st.number_input("Longitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = longFV,max_value=180.0,min_value=-180.0,format="%2.6f")
+    else:
+        latiEo = st.number_input("Latitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = 41.656761, max_value=90.0, min_value=-90.0,format="%2.6f")
+        longEo = st.number_input("Longitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = -0.8783888, max_value=180.0, min_value=-180.0, format="%2.6f")
+    
     df = pd.DataFrame(
         {
             "col1": np.array([latiEo]),
@@ -258,12 +265,12 @@ def registro_usuarios(ce, gen, usr):
         "Viv_unif_2adultos_1-2niños_calef_gas_aire_ac"]
     
     tipologiaSB = [
-        "(1924.326 kWh/año)Apartamento un adulto calefacción eléctrica",
-        "(745.992 kWh/año)Apartamento un adulto calefacción gas",
-        "(5931.25 kWh/año)Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
-        "(3059.416 kWh/año)Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
-        "(1916.711 kWh/año)Piso dos adultos, calefacción gas y AC",
-        "(3889.858 kWh/año)Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
+        "(1924 kWh/año)Apartamento un adulto calefacción eléctrica",
+        "(745 kWh/año)Apartamento un adulto calefacción gas",
+        "(5931 kWh/año)Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
+        "(3059 kWh/año)Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
+        "(1916 kWh/año)Piso dos adultos, calefacción gas y AC",
+        "(3889 kWh/año)Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
     ]
 
     st.header("Usuarios")

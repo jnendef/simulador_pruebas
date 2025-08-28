@@ -54,13 +54,13 @@ if ce:
 
     with tab1:
         try:
-            dfFV, numeroFV, fv = instalacion_fv(ce, fv)
+            dfFV, numeroFV, fv, latiFV, longiFV = instalacion_fv(ce, fv)
         except Exception as e:
             logging.debug("En la fotovoltaica: ", exc_info=True)
 
     with tab2:
         try:
-            dfEO, numeroEO, eo = instalacion_eo(ce, eo)
+            dfEO, numeroEO, eo = instalacion_eo(ce, eo, latiFV, longiFV)
         except Exception as e:
             logging.debug("En la eolica: ", exc_info=True)
             

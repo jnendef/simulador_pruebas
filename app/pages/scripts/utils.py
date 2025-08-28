@@ -5,7 +5,7 @@ import time
 # Guardamos el geolocator como recurso único
 @st.cache_resource
 def get_geolocator():
-    return Nominatim(user_agent="mi_proyecto_streamlit")
+    return Nominatim(user_agent="simulador_PV")
 
 geolocator = get_geolocator()
 
