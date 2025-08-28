@@ -20,28 +20,28 @@ diccioTipo = {  "Apartamento_1adulto_calef_electrica" : 6,
 listaDiccioTipo = list(diccioTipo)
 
 tipologiaSB0 = [
-            "(1924.326 kWh/año) Apartamento un adulto calefacción eléctrica",
-            "( 745.992 kWh/año) Apartamento un adulto calefacción gas",
-            "( 5931.25 kWh/año) Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
-            "(3059.416 kWh/año) Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
-            "(1916.711 kWh/año) Piso dos adultos, calefacción gas y AC",
-            "(3889.858 kWh/año) Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
+            "(1924 kWh/año) Apartamento un adulto calefacción eléctrica",
+            "( 745 kWh/año) Apartamento un adulto calefacción gas",
+            "( 5931 kWh/año) Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
+            "(3059 kWh/año) Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
+            "(1916 kWh/año) Piso dos adultos, calefacción gas y AC",
+            "(3889 kWh/año) Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
         ]
 
 tipologiaSB = {
-    6: "(1924.326 kWh/año) Apartamento un adulto calefacción eléctrica",
-    7: "( 745.992 kWh/año) Apartamento un adulto calefacción gas",
-    9: "( 5931.25 kWh/año) Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
-    8: "(3059.416 kWh/año) Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
-    12:"(1916.711 kWh/año) Piso dos adultos, calefacción gas y AC",
-    10:"(3889.858 kWh/año) Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
+    6: "(1924 kWh/año) Apartamento un adulto calefacción eléctrica",
+    7: "( 745 kWh/año) Apartamento un adulto calefacción gas",
+    9: "( 5931 kWh/año) Piso dos adultos, uno o dos niños, calefacción electrica y aire AC",
+    8: "(3059 kWh/año) Piso dos adultos, uno o dos niños, calefacción gas y aire AC",
+    12:"(1916 kWh/año) Piso dos adultos, calefacción gas y AC",
+    10:"(3889 kWh/año) Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
 }
 
 def grafico_genera_tot(mgentot, mconsutot, indicesgen):
     st.write("A continuación se muestra el gráfico para este usuario que incluye el consumo y generación fotovoltaica correspondiente para las plantas generadoras incluidas en la comunidad.")
 
-    dfGen = pd.DataFrame(mgentot,index=indicesgen,columns=["2_Generacion Correspondiente"])
-    dfCon = pd.DataFrame(mconsutot,index=indicesgen,columns=["1_Consumo Usuario"])
+    dfGen = pd.DataFrame(mgentot,index=indicesgen,columns=["2 Generación Correspondiente"])
+    dfCon = pd.DataFrame(mconsutot,index=indicesgen,columns=["1 Consumo Usuario"])
     dfCoef = dfCon.join(dfGen)
 
     st.markdown("*Gráfico 0. Consumo y generación correspondiente por meses del usuario*")
@@ -56,8 +56,8 @@ def grafico_genera_tot(mgentot, mconsutot, indicesgen):
                     dfCoef,
                     column_config={
                         "_index": indice,
-                        "1_Consumo Usuario": consumos,
-                        "2_Generacion Correspondiente": generacion
+                        "1 Consumo Usuario": consumos,
+                        "2 Generación Correspondiente": generacion
                     },
                     hide_index=False,
                     height = 43 * len(indicesgen),
